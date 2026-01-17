@@ -1,12 +1,15 @@
+import { useNavigate } from '@tanstack/react-router';
+
 import { Button } from '@ui/button';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowRight02Icon } from '@hugeicons/core-free-icons';
 import { FlipWords } from '@components/flip-words';
 
 export function Hero() {
+	const navigate = useNavigate();
+
 	return (
 		<section className='relative min-h-screen overflow-hidden flex items-center justify-center'>
-			{/* <div className='absolute inset-0 grid-pattern opacity-30' /> */}
 			<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-accent/5 rounded-full blur-3xl' />
 
 			<div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
@@ -38,6 +41,7 @@ export function Hero() {
 						<Button
 							size='lg'
 							className='gap-2 h-12 px-6'
+							onClick={() => navigate({ to: '/builder' })}
 						>
 							Start Building
 							<HugeiconsIcon
