@@ -1,6 +1,7 @@
 import type { AltSource, App, NewsItem, SectionID } from '@lib/types';
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
+import { useLocalStorage } from '@uidotdev/usehooks';
 import { createFileRoute } from '@tanstack/react-router';
 
 import { BuilderSidebar } from '@components/builder-sidebar';
@@ -25,38 +26,65 @@ export const Route = createFileRoute('/builder')({
 });
 
 function RouteComponent() {
-	const [source, setSource] = useState<AltSource>(defaultSource);
-	const [activeSection, setActiveSection] = useState<SectionID>('source');
-	const [validationErrors, setValidationErrors] = useState<string[]>([]);
-	const [showPreview, setShowPreview] = useState(true);
+	const [source, setSource] = useLocalStorage<AltSource>(
+		'altsource-builder-state',
+		defaultSource,
+	);
+	const [activeSection, setActiveSection] = useLocalStorage<SectionID>(
+		'altsource-active-section',
+		'source',
+	);
+	const [validationErrors, setValidationErrors] = useLocalStorage<string[]>(
+		'altsource-validation-errors',
+		[],
+	);
+	const [showPreview, setShowPreview] = useLocalStorage<boolean>(
+		'altsource-show-preview',
+		true,
+	);
 
-	const updateSourceMetadata = useCallback((updates: Partial<AltSource>) => {
-		setSource((prev) => ({ ...prev, ...updates }));
-	}, []);
+	const updateSourceMetadata = useCallback(
+		(updates: Partial<AltSource>) => {
+			setSource((prev) => ({ ...prev, ...updates }));
+		},
+		[setSource],
+	);
 
-	const updateApps = useCallback((apps: App[]) => {
-		setSource((prev) => ({ ...prev, apps }));
-	}, []);
+	const updateApps = useCallback(
+		(apps: App[]) => {
+			setSource((prev) => ({ ...prev, apps }));
+		},
+		[setSource],
+	);
 
-	const updateNews = useCallback((news: NewsItem[]) => {
-		setSource((prev) => ({ ...prev, news }));
-	}, []);
+	const updateNews = useCallback(
+		(news: NewsItem[]) => {
+			setSource((prev) => ({ ...prev, news }));
+		},
+		[setSource],
+	);
 
-	const updateFeaturedApps = useCallback((featuredApps: string[]) => {
-		setSource((prev) => ({ ...prev, featuredApps }));
-	}, []);
+	const updateFeaturedApps = useCallback(
+		(featuredApps: string[]) => {
+			setSource((prev) => ({ ...prev, featuredApps }));
+		},
+		[setSource],
+	);
 
-	const handleImport = useCallback((importedSource: AltSource) => {
-		setSource(importedSource);
-		setValidationErrors([]);
-		setActiveSection('source');
-	}, []);
+	const handleImport = useCallback(
+		(importedSource: AltSource) => {
+			setSource(importedSource);
+			setValidationErrors([]);
+			setActiveSection('source');
+		},
+		[setSource, setValidationErrors, setActiveSection],
+	);
 
 	const handleReset = useCallback(() => {
 		setSource(defaultSource);
 		setValidationErrors([]);
 		setActiveSection('source');
-	}, []);
+	}, [setSource, setValidationErrors, setActiveSection]);
 
 	const validateSource = useCallback(() => {
 		const errors: string[] = [];
@@ -77,7 +105,7 @@ function RouteComponent() {
 		});
 		setValidationErrors(errors);
 		return errors.length === 0;
-	}, [source]);
+	}, [source, setValidationErrors]);
 
 	const addApp = useCallback(() => {
 		const newApp: App = {
@@ -95,7 +123,7 @@ function RouteComponent() {
 		const newApps = [...source.apps, newApp];
 		updateApps(newApps);
 		setActiveSection(`app-${newApps.length - 1}`);
-	}, [source.apps, updateApps]);
+	}, [source.apps, updateApps, setActiveSection]);
 
 	const addNews = useCallback(() => {
 		const newNewsItem: NewsItem = {
@@ -109,7 +137,7 @@ function RouteComponent() {
 		const newNews = [newNewsItem, ...source.news];
 		updateNews(newNews);
 		setActiveSection('news-0');
-	}, [source.news, updateNews]);
+	}, [source.news, updateNews, setActiveSection]);
 
 	const deleteApp = useCallback(
 		(index: number) => {
@@ -117,7 +145,7 @@ function RouteComponent() {
 			updateApps(newApps);
 			setActiveSection('apps');
 		},
-		[source.apps, updateApps],
+		[source.apps, updateApps, setActiveSection],
 	);
 
 	const deleteNews = useCallback(
@@ -126,7 +154,7 @@ function RouteComponent() {
 			updateNews(newNews);
 			setActiveSection('news');
 		},
-		[source.news, updateNews],
+		[source.news, updateNews, setActiveSection],
 	);
 
 	return (
