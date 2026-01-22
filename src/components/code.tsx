@@ -44,9 +44,9 @@ export function Code() {
 							key={tab}
 							onClick={() => setActiveTab(tab)}
 							className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-								activeTab === tab
-									? 'bg-secondary text-foreground'
-									: 'text-muted-foreground hover:text-foreground'
+								activeTab === tab ?
+									'bg-secondary text-foreground'
+								:	'text-muted-foreground hover:text-foreground'
 							}`}
 						>
 							{tab}
@@ -68,31 +68,32 @@ export function Code() {
 										{i + 1}
 									</span>
 									<span className='text-foreground'>
-										{line.includes('"') &&
-										line.includes(':') ? (
+										{(
+											line.includes('"') &&
+											line.includes(':')
+										) ?
 											<>
-												<span className='text-sky-400'>
+												<span className='text-chart-3'>
 													{line.split(':')[0]}
 												</span>
 												<span className='text-muted-foreground'>
 													:
 												</span>
-												<span className='text-emerald-400'>
+												<span className='text-chart-1'>
 													{line
 														.split(':')
 														.slice(1)
 														.join(':')}
 												</span>
 											</>
-										) : line.includes('"') ? (
-											<span className='text-emerald-400'>
+										: line.includes('"') ?
+											<span className='text-chart-1'>
 												{line}
 											</span>
-										) : (
-											<span className='text-muted-foreground'>
+										:	<span className='text-muted-foreground'>
 												{line}
 											</span>
-										)}
+										}
 									</span>
 								</div>
 							))}
@@ -102,7 +103,7 @@ export function Code() {
 
 				{activeTab === 'Preview' && (
 					<div className='flex flex-col items-center justify-center py-12 text-center'>
-						<div className='h-16 w-16 rounded-2xl bg-linear-to-br from-blue-500 to-purple-600 mb-4' />
+						<div className='h-16 w-16 rounded-2xl bg-linear-to-br from-primary to-primary/80 mb-4' />
 						<h3 className='font-semibold'>My AltSource</h3>
 						<p className='text-sm text-muted-foreground mt-1'>
 							1 app available
@@ -113,7 +114,7 @@ export function Code() {
 				{activeTab === 'Apps' && (
 					<div className='space-y-3'>
 						<div className='flex items-center gap-4 p-3 rounded-lg bg-secondary/50 border border-border'>
-							<div className='h-12 w-12 rounded-xl bg-linear-to-br from-orange-500 to-pink-600' />
+							<div className='h-12 w-12 rounded-xl bg-linear-to-br from-primary to-primary/80' />
 							<div className='flex-1'>
 								<h4 className='font-medium'>Example App</h4>
 								<p className='text-sm text-muted-foreground'>
