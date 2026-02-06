@@ -1,28 +1,29 @@
-import { useState, useEffect, useRef } from 'react';
-import { HugeiconsIcon } from '@hugeicons/react';
-import {
-	Image01Icon,
-	AlertCircleIcon,
-	CheckmarkCircle03Icon,
-} from '@hugeicons/core-free-icons';
+import { useState, useRef, useEffect } from 'react';
 
 import { Label } from '@ui/label';
 import { Input } from '@ui/input';
 import { ImageFileUpload } from '@components/image-file-upload';
 
-interface ImageInputProps {
+import { HugeiconsIcon } from '@hugeicons/react';
+import {
+	Image01Icon,
+	AlertCircleIcon,
+	CheckmarkCircle01Icon,
+} from '@hugeicons/core-free-icons';
+
+interface ImageUrlInputProps {
 	label: string;
 	value: string;
 	onChange: (url: string) => void;
 	placeholder?: string;
 }
 
-export function ImageInput({
+export function ImageUrlInput({
 	label,
 	value,
 	onChange,
 	placeholder,
-}: ImageInputProps) {
+}: ImageUrlInputProps) {
 	const [imageStatus, setImageStatus] = useState<{
 		url: string;
 		status: 'valid' | 'invalid';
@@ -86,9 +87,9 @@ export function ImageInput({
 
 	return (
 		<div className='space-y-2'>
-			<Label className='text-muted-foreground'>{label}</Label>
+			<Label>{label}</Label>
 			<div className='flex gap-3 items-center'>
-				<div className='relative w-12 h-12 rounded-lg border border-border bg-card flex items-center justify-center overflow-hidden shrink-0'>
+				<div className='relative w-12 h-12 rounded-md border border-border bg-input flex items-center justify-center overflow-hidden shrink-0'>
 					{value && displayStatus === 'valid' ?
 						<img
 							src={value}
@@ -108,14 +109,14 @@ export function ImageInput({
 							value={value}
 							onChange={(e) => handleChange(e.target.value)}
 							placeholder={placeholder}
-							className='bg-card border-border text-foreground placeholder:text-muted-foreground pr-10 flex-1'
+							className='bg-input border-border pr-10 flex-1'
 						/>
 						<div className='absolute right-12 top-1/2 -translate-y-1/2'>
 							{displayStatus === 'valid' && (
 								<HugeiconsIcon
-									icon={CheckmarkCircle03Icon}
+									icon={CheckmarkCircle01Icon}
 									size={16}
-									className='text-chart-1'
+									className='text-green-500'
 								/>
 							)}
 							{displayStatus === 'invalid' && (
