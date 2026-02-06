@@ -1,0 +1,56 @@
+{
+	"name": "aurora-dark",
+	"displayName": "Aurora Dark",
+	"type": "dark",
+	"semanticHighlighting": false,
+
+	"colors": {
+		"editor.background": "oklch(0.1743 0.0227 283.7998)",
+		"editor.foreground": "oklch(0.9185 0.0257 285.8834)",
+		"editor.selectionBackground": "oklch(0.7162 0.1597 290.3962 / 0.35)",
+		"editorCursor.foreground": "oklch(0.7162 0.1597 290.3962)",
+		"editorIndentGuide.background": "oklch(0.3261 0.0597 282.5832)",
+		"editorIndentGuide.activeBackground": "oklch(0.7162 0.1597 290.3962)"
+	},
+
+	"tokenColors": [
+		{
+			"scope": "comment",
+			"settings": {
+				"foreground": "oklch(0.7166 0.0462 285.1741)",
+				"fontStyle": "italic"
+			}
+		},
+		{
+			"scope": ["support.type.property-name", "meta.object-literal.key"],
+			"settings": {
+				"foreground": "oklch(0.7162 0.1597 290.3962)",
+				"fontStyle": "bold"
+			}
+		},
+		{
+			"scope": "string",
+			"settings": {
+				"foreground": "oklch(0.7482 0.1235 244.7492)"
+			}
+		},
+		{
+			"scope": "constant.numeric",
+			"settings": {
+				"foreground": "oklch(0.7546 0.1831 346.8124)"
+			}
+		},
+		{
+			"scope": ["constant.language.boolean", "constant.language.null"],
+			"settings": {
+				"foreground": "oklch(0.7162 0.1597 290.3962)"
+			}
+		},
+		{
+			"scope": "punctuation",
+			"settings": {
+				"foreground": "oklch(0.6382 0.1047 274.9117)"
+			}
+		}
+	]
+}

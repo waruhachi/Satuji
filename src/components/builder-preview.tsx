@@ -1,6 +1,8 @@
 import type { AltSource } from '@lib/types';
 
 import { useState, useMemo } from 'react';
+import ShikiHighlighter from 'react-shiki/web';
+import type { ThemeRegistrationAny } from 'shiki';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
 	Copy01Icon,
@@ -13,6 +15,11 @@ import {
 } from '@hugeicons/core-free-icons';
 
 import { Button } from '@ui/button';
+import auroraLight from '@assets/aurora-light.json';
+import auroraDark from '@assets/aurora-dark.json';
+
+const auroraLightTheme = auroraLight as ThemeRegistrationAny;
+const auroraDarkTheme = auroraDark as ThemeRegistrationAny;
 
 interface JsonPreviewPanelProps {
 	source: AltSource;
@@ -93,21 +100,6 @@ export function BuilderPreview({
 		a.click();
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
-	};
-
-	const highlightJson = (json: string): string => {
-		return json
-			.replace(/(".*?"):/g, '<span class="text-primary">$1</span>:')
-			.replace(/: (".*?")/g, ': <span class="text-chart-1">$1</span>')
-			.replace(/: (\d+)/g, ': <span class="text-chart-2">$1</span>')
-			.replace(
-				/: (true|false)/g,
-				': <span class="text-chart-3">$1</span>',
-			)
-			.replace(
-				/: (null)/g,
-				': <span class="text-muted-foreground">$1</span>',
-			);
 	};
 
 	return (
@@ -218,14 +210,18 @@ export function BuilderPreview({
 					)}
 
 					{/* Code Preview */}
-					<div className='flex-1 overflow-auto'>
-						<pre className='p-4 text-xs font-mono leading-relaxed text-foreground'>
-							<code
-								dangerouslySetInnerHTML={{
-									__html: highlightJson(jsonString),
-								}}
-							/>
-						</pre>
+					<div className='flex-1 overflow-auto p-4'>
+						<ShikiHighlighter
+							language='json'
+							theme={{
+								light: auroraLightTheme,
+								dark: auroraDarkTheme,
+							}}
+							defaultColor='light-dark()'
+							showLineNumbers
+						>
+							{jsonString.trim()}
+						</ShikiHighlighter>
 					</div>
 
 					{/* Footer Stats */}
