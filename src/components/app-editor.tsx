@@ -1,6 +1,6 @@
-import type { App, Screenshot } from '@lib/types';
+import type { App, DeviceScreenshots, Screenshot } from '@lib/types';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
 	PackageIcon,
@@ -41,6 +41,22 @@ export function AppEditor({
 	onDelete,
 	onDuplicate,
 }: AppEditorProps) {
+	const screenshotsForEditor = useMemo<(string | Screenshot)[]>(() => {
+		if (!app.screenshots) return [];
+		if (Array.isArray(app.screenshots)) return app.screenshots;
+		if (
+			typeof app.screenshots === 'object' &&
+			('iphone' in app.screenshots || 'ipad' in app.screenshots)
+		) {
+			const deviceScreenshots = app.screenshots as DeviceScreenshots;
+			return [
+				...(deviceScreenshots.iphone ?? []),
+				...(deviceScreenshots.ipad ?? []),
+			];
+		}
+		return [];
+	}, [app.screenshots]);
+
 	const [expandedSections, setExpandedSections] = useState<
 		Record<string, boolean>
 	>({
@@ -65,8 +81,8 @@ export function AppEditor({
 				<div className='flex items-center gap-4'>
 					{app.iconURL ?
 						<img
-							src={app.iconURL || '/placeholder.svg'}
-							alt=''
+							src={app.iconURL}
+							alt={app.name ? `${app.name} icon` : 'App icon'}
 							className='w-16 h-16 rounded-2xl object-cover'
 						/>
 					:	<div
@@ -336,7 +352,7 @@ export function AppEditor({
 				></CollapsibleTrigger>
 				<CollapsibleContent className='mt-3'>
 					<ScreenshotManager
-						screenshots={app.screenshots as (string | Screenshot)[]}
+						screenshots={screenshotsForEditor}
 						onUpdate={(screenshots) =>
 							updateField('screenshots', screenshots)
 						}
