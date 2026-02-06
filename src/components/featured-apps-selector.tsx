@@ -47,62 +47,73 @@ export function FeaturedAppsSelector({
 
 	return (
 		<div className='space-y-2'>
-			{apps.map((app) => (
-				<div
-					key={app.bundleIdentifier}
-					className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
-						featuredApps.includes(app.bundleIdentifier) ?
-							'bg-primary/10 border-primary/20'
-						:	'bg-card/50 border-border hover:border-border'
-					}`}
-				>
-					<Checkbox
-						id={`featured-${app.bundleIdentifier}`}
-						checked={featuredApps.includes(app.bundleIdentifier)}
-						onCheckedChange={(checked) =>
-							handleToggle(
+			{apps.map((app, index) => {
+				const itemId = app.bundleIdentifier || `featured-app-${index}`;
+
+				return (
+					<div
+						key={itemId}
+						className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
+							featuredApps.includes(app.bundleIdentifier) ?
+								'bg-primary/10 border-primary/20'
+							:	'bg-card/50 border-border hover:border-border'
+						}`}
+					>
+						<Checkbox
+							id={itemId}
+							checked={featuredApps.includes(
 								app.bundleIdentifier,
-								checked as boolean,
-							)
-						}
-						className='border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary'
-					/>
-					<div className='flex items-center gap-3 flex-1 min-w-0'>
-						{app.iconURL ?
-							<img
-								src={app.iconURL || '/placeholder.svg'}
-								alt=''
-								className='w-8 h-8 rounded-lg object-cover'
-							/>
-						:	<div
-								className='w-8 h-8 rounded-lg flex items-center justify-center'
-								style={{
-									backgroundColor: app.tintColor || '#6366f1',
-								}}
-							>
-								<HugeiconsIcon
-									icon={PackageIcon}
-									size={16}
-									className='text-foreground'
-								/>
-							</div>
-						}
-						<Label
-							htmlFor={`featured-${app.bundleIdentifier}`}
-							className='cursor-pointer truncate text-muted-foreground'
-						>
-							{app.name || 'Untitled App'}
-						</Label>
-					</div>
-					{featuredApps.includes(app.bundleIdentifier) && (
-						<HugeiconsIcon
-							icon={StarIcon}
-							size={16}
-							className='text-primary fill-primary'
+							)}
+							onCheckedChange={(checked) =>
+								handleToggle(
+									app.bundleIdentifier,
+									checked as boolean,
+								)
+							}
+							className='border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary'
 						/>
-					)}
-				</div>
-			))}
+						<div className='flex items-center gap-3 flex-1 min-w-0'>
+							{app.iconURL ?
+								<img
+									src={app.iconURL}
+									alt={
+										app.name ?
+											`${app.name} icon`
+										:	'App icon'
+									}
+									className='w-8 h-8 rounded-lg object-cover'
+								/>
+							:	<div
+									className='w-8 h-8 rounded-lg flex items-center justify-center'
+									style={{
+										backgroundColor:
+											app.tintColor || '#6366f1',
+									}}
+								>
+									<HugeiconsIcon
+										icon={PackageIcon}
+										size={16}
+										className='text-foreground'
+									/>
+								</div>
+							}
+							<Label
+								htmlFor={itemId}
+								className='cursor-pointer truncate text-muted-foreground'
+							>
+								{app.name || 'Untitled App'}
+							</Label>
+						</div>
+						{featuredApps.includes(app.bundleIdentifier) && (
+							<HugeiconsIcon
+								icon={StarIcon}
+								size={16}
+								className='text-primary fill-primary'
+							/>
+						)}
+					</div>
+				);
+			})}
 		</div>
 	);
 }

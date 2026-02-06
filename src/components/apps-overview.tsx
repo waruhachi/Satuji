@@ -80,8 +80,12 @@ export function AppsOverview({
 						>
 							{app.iconURL ?
 								<img
-									src={app.iconURL || '/placeholder.svg'}
-									alt=''
+									src={app.iconURL}
+									alt={
+										app.name ?
+											`${app.name} icon`
+										:	'App icon'
+									}
 									className='w-14 h-14 rounded-xl object-cover shrink-0'
 								/>
 							:	<div
