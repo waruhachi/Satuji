@@ -14,6 +14,15 @@ export default defineConfig({
 		react(),
 		tailwindcss(),
 	],
+	server: {
+		proxy: {
+			'/api/freeimage': {
+				target: 'https://freeimage.host',
+				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/api\/freeimage/, '/api/1'),
+			},
+		},
+	},
 	resolve: {
 		alias: {
 			'@': path.resolve(__dirname, './src'),

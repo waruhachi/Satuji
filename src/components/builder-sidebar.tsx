@@ -13,6 +13,7 @@ import {
 	Rotate01Icon,
 	CheckmarkCircle03Icon,
 	AlertCircleIcon,
+	Key01Icon,
 } from '@hugeicons/core-free-icons';
 
 import { Button } from '@ui/button';
@@ -30,6 +31,8 @@ import {
 	CollapsibleTrigger,
 } from '@ui/collapsible';
 
+import { ImageUploadSettings } from '@components/image-upload-settings';
+
 interface BuilderSidebarProps {
 	source: AltSource;
 	activeSection: SectionID;
@@ -41,6 +44,40 @@ interface BuilderSidebarProps {
 	onValidate: () => boolean;
 	validationErrors: string[];
 }
+
+const normalizeAltSource = (value: unknown): AltSource => {
+	if (!value || typeof value !== 'object') {
+		throw new Error('Invalid JSON structure');
+	}
+
+	const parsed = value as Partial<AltSource>;
+
+	return {
+		name: typeof parsed.name === 'string' ? parsed.name : '',
+		subtitle:
+			typeof parsed.subtitle === 'string' ? parsed.subtitle : undefined,
+		description:
+			typeof parsed.description === 'string' ?
+				parsed.description
+			:	undefined,
+		iconURL:
+			typeof parsed.iconURL === 'string' ? parsed.iconURL : undefined,
+		headerURL:
+			typeof parsed.headerURL === 'string' ? parsed.headerURL : undefined,
+		website:
+			typeof parsed.website === 'string' ? parsed.website : undefined,
+		tintColor:
+			typeof parsed.tintColor === 'string' ? parsed.tintColor : undefined,
+		featuredApps:
+			Array.isArray(parsed.featuredApps) ?
+				parsed.featuredApps.filter(
+					(id): id is string => typeof id === 'string',
+				)
+			:	undefined,
+		apps: Array.isArray(parsed.apps) ? parsed.apps : [],
+		news: Array.isArray(parsed.news) ? parsed.news : [],
+	};
+};
 
 export function BuilderSidebar({
 	source,
@@ -56,6 +93,7 @@ export function BuilderSidebar({
 	const [appsExpanded, setAppsExpanded] = useState(true);
 	const [newsExpanded, setNewsExpanded] = useState(true);
 	const [resetDialogOpen, setResetDialogOpen] = useState(false);
+	const [settingsOpen, setSettingsOpen] = useState(false);
 	const [importError, setImportError] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -66,15 +104,19 @@ export function BuilderSidebar({
 		const reader = new FileReader();
 		reader.onload = (event) => {
 			try {
-				const content = event.target?.result as string;
-				const parsed = JSON.parse(content) as AltSource;
-				if (!parsed.apps) parsed.apps = [];
-				if (!parsed.news) parsed.news = [];
+				const content = event.target?.result;
+				if (typeof content !== 'string') {
+					throw new Error('Invalid file contents');
+				}
+				const parsed = normalizeAltSource(JSON.parse(content));
 				onImport(parsed);
 				setImportError(null);
 			} catch {
 				setImportError('Invalid JSON file');
 			}
+		};
+		reader.onerror = () => {
+			setImportError('Unable to read file');
 		};
 		reader.readAsText(file);
 		e.target.value = '';
@@ -227,7 +269,11 @@ export function BuilderSidebar({
 													app.iconURL ||
 													'/placeholder.svg'
 												}
-												alt=''
+												alt={
+													app.name ?
+														`${app.name} icon`
+													:	'App icon'
+												}
 												className='w-5 h-5 rounded-md object-cover'
 											/>
 										:	<div
@@ -415,6 +461,19 @@ export function BuilderSidebar({
 					}
 				</Button>
 
+				<Button
+					variant='outline'
+					size='sm'
+					onClick={() => setSettingsOpen(true)}
+					className='w-full gap-2 bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-muted'
+				>
+					<HugeiconsIcon
+						icon={Key01Icon}
+						size={16}
+					/>
+					API Settings
+				</Button>
+
 				{importError && (
 					<p className='text-xs text-destructive flex items-center gap-1'>
 						<HugeiconsIcon
@@ -425,6 +484,25 @@ export function BuilderSidebar({
 					</p>
 				)}
 			</div>
+
+			{/* Settings Dialog */}
+			<Dialog
+				open={settingsOpen}
+				onOpenChange={setSettingsOpen}
+			>
+				<DialogContent className='bg-card border-border sm:max-w-md'>
+					<DialogHeader>
+						<DialogTitle className='text-foreground'>
+							Image Upload Settings
+						</DialogTitle>
+						<DialogDescription className='text-muted-foreground'>
+							Configure your freeimage.host API key to enable
+							image uploads from your device.
+						</DialogDescription>
+					</DialogHeader>
+					<ImageUploadSettings />
+				</DialogContent>
+			</Dialog>
 
 			{/* Reset Dialog */}
 			<Dialog
