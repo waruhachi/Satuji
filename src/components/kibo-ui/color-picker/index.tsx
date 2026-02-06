@@ -39,7 +39,8 @@ export const ColorPicker = ({
 	className,
 	...props
 }: ColorPickerProps) => {
-	const selectedColor = Color(value);
+	const resolvedValue = value ?? defaultValue;
+	const selectedColor = Color(resolvedValue);
 	const defaultColor = Color(defaultValue);
 
 	const [hue, setHue] = useState(

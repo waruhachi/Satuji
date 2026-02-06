@@ -34,7 +34,10 @@ export const ThemeSwitcher = ({ className }: ThemeSwitcherProps) => {
 	const { theme, setTheme } = useTheme();
 
 	const handleThemeClick = (themeKey: 'light' | 'dark' | 'system') => {
-		if (!document.startViewTransition) setTheme(themeKey);
+		if (!document.startViewTransition) {
+			setTheme(themeKey);
+			return;
+		}
 		document.startViewTransition(() => setTheme(themeKey));
 	};
 
