@@ -22,10 +22,13 @@ export const FlipWords = ({
 	}, [currentWord, words]);
 
 	useEffect(() => {
-		if (!isAnimating)
-			setTimeout(() => {
-				startAnimation();
-			}, duration);
+		if (isAnimating) return;
+
+		const timeoutId = window.setTimeout(() => {
+			startAnimation();
+		}, duration);
+
+		return () => window.clearTimeout(timeoutId);
 	}, [isAnimating, duration, startAnimation]);
 
 	return (
