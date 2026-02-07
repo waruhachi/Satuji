@@ -43,17 +43,34 @@ export const ColorPicker = ({
 	const selectedColor = Color(resolvedValue);
 	const defaultColor = Color(defaultValue);
 
+	const resolveNumber = (
+		primary: number,
+		fallback: number,
+		defaultValue: number,
+	) =>
+		Number.isFinite(primary) ? primary
+		: Number.isFinite(fallback) ? fallback
+		: defaultValue;
+
 	const [hue, setHue] = useState(
-		selectedColor.hue() || defaultColor.hue() || 0,
+		resolveNumber(selectedColor.hue(), defaultColor.hue(), 0),
 	);
 	const [saturation, setSaturation] = useState(
-		selectedColor.saturationl() || defaultColor.saturationl() || 100,
+		resolveNumber(
+			selectedColor.saturationl(),
+			defaultColor.saturationl(),
+			100,
+		),
 	);
 	const [lightness, setLightness] = useState(
-		selectedColor.lightness() || defaultColor.lightness() || 50,
+		resolveNumber(selectedColor.lightness(), defaultColor.lightness(), 50),
 	);
 	const [alpha, setAlpha] = useState(
-		selectedColor.alpha() * 100 || defaultColor.alpha() * 100,
+		resolveNumber(
+			selectedColor.alpha() * 100,
+			defaultColor.alpha() * 100,
+			100,
+		),
 	);
 	const [mode, setMode] = useState('hex');
 
@@ -199,6 +216,9 @@ ColorPickerSelection.displayName = 'ColorPickerSelection';
 
 export type ColorPickerHueProps = ComponentProps<typeof Slider.Root>;
 
+const toNumberValue = (value: number | readonly number[]) =>
+	Array.isArray(value) ? (value[0] ?? 0) : value;
+
 export const ColorPickerHue = ({
 	className,
 	...props
@@ -209,9 +229,9 @@ export const ColorPickerHue = ({
 		<Slider.Root
 			className={cn('relative h-4 w-full touch-none', className)}
 			max={360}
-			onValueChange={(hue) => setHue(hue as number)}
+			onValueChange={(next) => setHue(toNumberValue(next))}
 			step={1}
-			value={[hue]}
+			value={hue}
 			{...props}
 		>
 			<Slider.Control>
@@ -235,9 +255,9 @@ export const ColorPickerAlpha = ({
 		<Slider.Root
 			className={cn('relative h-4 w-full touch-none', className)}
 			max={100}
-			onValueChange={(alpha) => setAlpha(alpha as number)}
+			onValueChange={(next) => setAlpha(toNumberValue(next))}
 			step={1}
-			value={[alpha]}
+			value={alpha}
 			{...props}
 		>
 			<Slider.Control>
