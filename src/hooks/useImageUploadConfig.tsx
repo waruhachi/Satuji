@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ImageUploadConfigContext } from '@/contexts/image-upload-config-context';
+import { ImageUploadConfigContext } from '@contexts/image-upload-config-context';
 
 export function useImageUploadConfig() {
 	const context = useContext(ImageUploadConfigContext);

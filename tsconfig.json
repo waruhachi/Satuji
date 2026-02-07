@@ -11,33 +11,15 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
-			"@/*": [
-				"./src/*"
-			],
-			"@ui/*": [
-				"./src/components/ui/*"
-			],
-			"@components/*": [
-				"./src/components/*"
-			],
-			"@hooks/*": [
-				"./src/hooks/*"
-			],
-			"@contexts/*": [
-				"./src/contexts/*"
-			],
-			"@providers/*": [
-				"./src/providers/*"
-			],
-			"@lib/*": [
-				"./src/lib/*"
-			],
-			"@assets/*": [
-				"./src/assets/*"
-			],
-			"@api/*": [
-				"./src/api/*"
-			]
+			"@/*": ["./src/*"],
+			"@ui/*": ["./src/components/ui/*"],
+			"@components/*": ["./src/components/*"],
+			"@hooks/*": ["./src/hooks/*"],
+			"@contexts/*": ["./src/contexts/*"],
+			"@providers/*": ["./src/providers/*"],
+			"@lib/*": ["./src/lib/*"],
+			"@assets/*": ["./src/assets/*"],
+			"@api/*": ["./src/api/*"]
 		}
 	}
 }

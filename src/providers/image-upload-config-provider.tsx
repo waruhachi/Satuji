@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import {
 	ImageUploadConfigContext,
 	type ImageUploadConfigContextValue,
-} from '@/contexts/image-upload-config-context';
+} from '@contexts/image-upload-config-context';
 
 // Schema version for localStorage compatibility
 const STORAGE_KEY = 'image_upload_config';

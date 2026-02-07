@@ -13,18 +13,18 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ColorPickerIcon } from '@hugeicons/core-free-icons';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@components/ui/button';
+import { Input } from '@components/ui/input';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '@/components/ui/select';
-import { cn } from '@/lib/utils';
-import { ColorPickerContext } from '@/contexts/color-picker-context';
-import { useColorPicker } from '@/hooks/useColorPicker';
+} from '@components/ui/select';
+import { cn } from '@lib/utils';
+import { ColorPickerContext } from '@contexts/color-picker-context';
+import { useColorPicker } from '@hooks/useColorPicker';
 
 export type ColorPickerProps = HTMLAttributes<HTMLDivElement> & {
 	value?: Parameters<typeof Color>[0];

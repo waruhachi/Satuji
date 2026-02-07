@@ -6,8 +6,8 @@ import type {
 	DeviceScreenshots,
 	NewsItem,
 	Screenshot,
-} from '@/lib/types';
-import { createId } from '@/lib/ids';
+} from '@lib/types';
+import { createId } from '@lib/ids';
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
 	typeof value === 'object' && value !== null;

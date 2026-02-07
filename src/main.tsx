@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client';
 import { Toaster } from '@components/ui/sonner.tsx';
 import { ThemeProvider } from '@providers/theme-provider.tsx';
 import { TanstackRouterProvider } from '@providers/tanstack-route-provider.tsx';
-import { ImageUploadConfigProvider } from '@/providers/image-upload-config-provider';
+import { ImageUploadConfigProvider } from '@providers/image-upload-config-provider';
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>

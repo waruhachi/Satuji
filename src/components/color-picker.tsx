@@ -9,7 +9,7 @@ import {
 	ColorPickerSelection,
 	ColorPickerHue,
 	ColorPickerEyeDropper,
-} from '@/components/kibo-ui/color-picker';
+} from '@components/kibo-ui/color-picker';
 import { normalizeHex } from '@lib/utils';
 
 interface ColorPickerProps {

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ColorPickerContext } from '@/contexts/color-picker-context';
+import { ColorPickerContext } from '@contexts/color-picker-context';
 
 export const useColorPicker = () => {
 	const context = useContext(ColorPickerContext);
