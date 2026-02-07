@@ -19,6 +19,7 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from '@ui/collapsible';
+import { createId } from '@lib/ids';
 
 interface VersionManagerProps {
 	versions: AppVersion[];
@@ -26,6 +27,7 @@ interface VersionManagerProps {
 }
 
 const createDefaultVersion = (): AppVersion => ({
+	__id: createId(),
 	version: '',
 	date: new Date().toISOString().split('T')[0],
 	size: 0,
@@ -110,7 +112,7 @@ export function VersionManager({ versions, onUpdate }: VersionManagerProps) {
 			:	<div className='space-y-3'>
 					{versions.map((version, index) => (
 						<Collapsible
-							key={`${version.version}-${index}`}
+							key={version.__id || `${version.version}-${index}`}
 							open={expandedIndex === index}
 							onOpenChange={(open) =>
 								setExpandedIndex(open ? index : null)

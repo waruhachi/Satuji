@@ -11,6 +11,7 @@ import {
 import { Button } from '@ui/button';
 import { Input } from '@ui/input';
 import { Label } from '@ui/label';
+import { createId } from '@lib/ids';
 
 interface ScreenshotManagerProps {
 	screenshots: (string | Screenshot)[] | undefined;
@@ -22,13 +23,18 @@ export function ScreenshotManager({
 	onUpdate,
 }: ScreenshotManagerProps) {
 	const normalizedScreenshots: Screenshot[] = screenshots.map((s) =>
-		typeof s === 'string' ? { imageURL: s } : s,
+		typeof s === 'string' ? { __id: createId(), imageURL: s } : s,
 	);
 
 	const handleAdd = () => {
 		onUpdate([
 			...screenshots,
-			{ imageURL: '', width: undefined, height: undefined },
+			{
+				__id: createId(),
+				imageURL: '',
+				width: undefined,
+				height: undefined,
+			},
 		]);
 	};
 
@@ -91,7 +97,7 @@ export function ScreenshotManager({
 			:	<div className='space-y-4'>
 					{normalizedScreenshots.map((screenshot, index) => (
 						<div
-							key={index}
+							key={screenshot.__id || index}
 							className='flex gap-4 p-4 rounded-lg bg-card/50 border border-border'
 						>
 							<div className='flex items-center'>
