@@ -6,12 +6,14 @@ export type SectionID =
 	| `news-${number}`;
 
 export interface Screenshot {
+	__id?: string;
 	imageURL: string;
 	width?: number;
 	height?: number;
 }
 
 export interface AppVersion {
+	__id?: string;
 	version: string;
 	date: string;
 	size: number;

@@ -50,6 +50,7 @@ export function BuilderPreview({
 			if (typeof obj === 'object' && obj !== null) {
 				const cleaned: Record<string, unknown> = {};
 				for (const [key, value] of Object.entries(obj)) {
+					if (key.startsWith('__')) continue;
 					const cleanedValue = clean(value);
 					if (
 						cleanedValue !== undefined &&

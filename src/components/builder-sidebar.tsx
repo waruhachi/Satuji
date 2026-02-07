@@ -32,6 +32,7 @@ import {
 } from '@ui/collapsible';
 
 import { ImageUploadSettings } from '@components/image-upload-settings';
+import { normalizeAltSource } from '@lib/normalize';
 
 interface BuilderSidebarProps {
 	source: AltSource;
@@ -44,40 +45,6 @@ interface BuilderSidebarProps {
 	onValidate: () => boolean;
 	validationErrors: string[];
 }
-
-const normalizeAltSource = (value: unknown): AltSource => {
-	if (!value || typeof value !== 'object') {
-		throw new Error('Invalid JSON structure');
-	}
-
-	const parsed = value as Partial<AltSource>;
-
-	return {
-		name: typeof parsed.name === 'string' ? parsed.name : '',
-		subtitle:
-			typeof parsed.subtitle === 'string' ? parsed.subtitle : undefined,
-		description:
-			typeof parsed.description === 'string' ?
-				parsed.description
-			:	undefined,
-		iconURL:
-			typeof parsed.iconURL === 'string' ? parsed.iconURL : undefined,
-		headerURL:
-			typeof parsed.headerURL === 'string' ? parsed.headerURL : undefined,
-		website:
-			typeof parsed.website === 'string' ? parsed.website : undefined,
-		tintColor:
-			typeof parsed.tintColor === 'string' ? parsed.tintColor : undefined,
-		featuredApps:
-			Array.isArray(parsed.featuredApps) ?
-				parsed.featuredApps.filter(
-					(id): id is string => typeof id === 'string',
-				)
-			:	undefined,
-		apps: Array.isArray(parsed.apps) ? parsed.apps : [],
-		news: Array.isArray(parsed.news) ? parsed.news : [],
-	};
-};
 
 export function BuilderSidebar({
 	source,

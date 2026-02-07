@@ -1,12 +1,13 @@
 import type { AltSource, App, NewsItem, SectionID } from '@lib/types';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useLocalStorage } from '@uidotdev/usehooks';
 import { createFileRoute } from '@tanstack/react-router';
 
 import { BuilderSidebar } from '@components/builder-sidebar';
 import { BuilderContent } from '@components/builder-content';
 import { BuilderPreview } from '@components/builder-preview';
+import { needsNormalization, normalizeAltSource } from '@lib/normalize';
 
 const defaultSource: AltSource = {
 	name: '',
@@ -42,6 +43,11 @@ function RouteComponent() {
 		'altsource-show-preview',
 		true,
 	);
+
+	useEffect(() => {
+		if (!needsNormalization(source)) return;
+		setSource(normalizeAltSource(source));
+	}, [source, setSource]);
 
 	const updateSourceMetadata = useCallback(
 		(updates: Partial<AltSource>) => {
@@ -102,6 +108,18 @@ function RouteComponent() {
 				errors.push(
 					`App ${index + 1}: At least one version is required`,
 				);
+			app.versions.forEach((version, versionIndex) => {
+				if (!version.date?.trim()) {
+					errors.push(
+						`App ${index + 1} Version ${versionIndex + 1}: Release date is required`,
+					);
+				}
+			});
+		});
+		source.news.forEach((item, index) => {
+			if (!item.date?.trim()) {
+				errors.push(`News ${index + 1}: Date is required`);
+			}
 		});
 		setValidationErrors(errors);
 		return errors.length === 0;
