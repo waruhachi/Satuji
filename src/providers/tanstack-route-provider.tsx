@@ -7,7 +7,11 @@ declare module '@tanstack/react-router' {
 	}
 }
 
-const router = createRouter({ routeTree });
+const router = createRouter({
+	routeTree,
+	defaultPreload: 'intent',
+	scrollRestoration: true,
+});
 
 export function TanstackRouterProvider() {
 	return <RouterProvider router={router} />;
