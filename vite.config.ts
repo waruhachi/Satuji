@@ -16,10 +16,11 @@ export default defineConfig({
 	],
 	server: {
 		proxy: {
-			'/api/freeimage': {
+			'/api/upload': {
 				target: 'https://freeimage.host',
 				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api\/freeimage/, '/api/1'),
+				rewrite: (path) =>
+					path.replace(/^\/api\/upload/, '/api/1/upload'),
 			},
 		},
 	},
@@ -33,7 +34,6 @@ export default defineConfig({
 			'@providers': path.resolve(__dirname, './src/providers'),
 			'@lib': path.resolve(__dirname, './src/lib'),
 			'@assets': path.resolve(__dirname, './src/assets'),
-			'@api': path.resolve(__dirname, './src/api'),
 		},
 	},
 });

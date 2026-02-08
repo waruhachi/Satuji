@@ -18,8 +18,7 @@
 			"@contexts/*": ["./src/contexts/*"],
 			"@providers/*": ["./src/providers/*"],
 			"@lib/*": ["./src/lib/*"],
-			"@assets/*": ["./src/assets/*"],
-			"@api/*": ["./src/api/*"]
+			"@assets/*": ["./src/assets/*"]
 		}
 	}
 }

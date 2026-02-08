@@ -31,5 +31,5 @@
 			"@assets/*": ["./src/assets/*"]
 		}
 	},
-	"include": ["src"]
+	"include": ["src", "api"]
 }

@@ -58,7 +58,7 @@ export function useImageUpload(apiKey: string | null): UseImageUploadReturn {
 				formData.append('action', 'upload');
 				formData.append('format', 'json');
 
-				const response = await fetch('/api/freeimage/upload', {
+				const response = await fetch('/api/upload', {
 					method: 'POST',
 					body: formData,
 					signal: abortController.signal,
