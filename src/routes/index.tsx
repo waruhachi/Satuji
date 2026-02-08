@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { AuroraBackground } from '@components/aurora';
-import { Hero } from '@components/hero';
+import { AuroraBackground } from '@components/visual/aurora';
+import { Hero } from '@components/visual/hero';
 
 export const Route = createFileRoute('/')({
 	component: Index,

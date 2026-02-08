@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@ui/button';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowRight02Icon } from '@hugeicons/core-free-icons';
-import { FlipWords } from '@components/flip-words';
+import { FlipWords } from '@components/visual/flip-words';
 
 export function Hero() {
 	const navigate = useNavigate();
