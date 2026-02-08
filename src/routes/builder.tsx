@@ -4,9 +4,9 @@ import { useCallback, useEffect } from 'react';
 import { useLocalStorage } from '@uidotdev/usehooks';
 import { createFileRoute } from '@tanstack/react-router';
 
-import { BuilderSidebar } from '@components/builder-sidebar';
-import { BuilderContent } from '@components/builder-content';
-import { BuilderPreview } from '@components/builder-preview';
+import { BuilderSidebar } from '@components/builder/sidebar';
+import { BuilderContent } from '@components/builder/content';
+import { BuilderPreview } from '@components/builder/preview';
 import { needsNormalization, normalizeAltSource } from '@lib/normalize';
 
 const defaultSource: AltSource = {

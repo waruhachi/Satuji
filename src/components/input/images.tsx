@@ -8,7 +8,7 @@ import {
 
 import { Label } from '@ui/label';
 import { Input } from '@ui/input';
-import { ImageFileUpload } from '@components/image-file-upload';
+import { ImageFileUpload } from '@components/input/image-upload';
 
 interface ImageInputProps {
 	label: string;

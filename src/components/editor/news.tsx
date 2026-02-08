@@ -22,8 +22,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@ui/select';
-import { ColorPicker } from '@components/color-picker';
-import { ImageInput } from '@components/image-input';
+import { ColorPicker } from '@components/input/simple-color-picker';
+import { ImageInput } from '@components/input/images';
 
 interface NewsEditorProps {
 	item: NewsItem;

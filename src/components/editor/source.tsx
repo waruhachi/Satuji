@@ -12,9 +12,9 @@ import {
 import { Input } from '@ui/input';
 import { Label } from '@ui/label';
 import { Textarea } from '@ui/textarea';
-import { ColorPicker } from '@components/color-picker';
-import { ImageInput } from '@components/image-input';
-import { FeaturedAppsSelector } from '@components/featured-apps-selector';
+import { ColorPicker } from '@components/input/simple-color-picker';
+import { ImageInput } from '@components/input/images';
+import { FeaturedAppsSelector } from '@components/editor/featured-apps';
 
 interface SourceEditorProps {
 	source: AltSource;

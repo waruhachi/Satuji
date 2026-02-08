@@ -31,7 +31,7 @@ import {
 	CollapsibleTrigger,
 } from '@ui/collapsible';
 
-import { ImageUploadSettings } from '@components/image-upload-settings';
+import { ImageUploadSettings } from '@components/manager/images';
 import { normalizeAltSource } from '@lib/normalize';
 
 interface BuilderSidebarProps {

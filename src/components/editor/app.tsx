@@ -22,11 +22,11 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from '@ui/collapsible';
-import { ColorPicker } from '@components/color-picker';
-import { ImageInput } from '@components/image-input';
-import { VersionManager } from '@components/version-manager';
-import { ScreenshotManager } from '@components/screenshot-manager';
-import { PermissionManager } from '@components/permission-manager';
+import { ColorPicker } from '@components/input/simple-color-picker';
+import { ImageInput } from '@components/input/images';
+import { VersionManager } from '@components/manager/versions';
+import { ScreenshotManager } from '@components/manager/screenshots';
+import { PermissionManager } from '@components/manager/permissions';
 
 interface AppEditorProps {
 	app: App;

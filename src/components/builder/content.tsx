@@ -1,10 +1,10 @@
 import type { AltSource, App, NewsItem, SectionID } from '@lib/types';
 
-import { SourceEditor } from '@components/source-editor';
-import { AppEditor } from '@components/app-editor';
-import { NewsEditor } from '@components/news-editor';
-import { AppsOverview } from '@components/apps-overview';
-import { NewsOverview } from '@components/news-overview';
+import { SourceEditor } from '@components/editor/source';
+import { AppEditor } from '@components/editor/app';
+import { NewsEditor } from '@components/editor/news';
+import { AppsOverview } from '@components/overview/apps';
+import { NewsOverview } from '@components/overview/news';
 
 interface BuilderContentProps {
 	source: AltSource;
