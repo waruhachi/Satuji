@@ -12,6 +12,7 @@ import { Button } from '@ui/button';
 import { Input } from '@ui/input';
 import { Label } from '@ui/label';
 import { createId } from '@lib/ids';
+import { ImageFileUpload } from '@components/input/image-upload';
 
 interface ScreenshotManagerProps {
 	screenshots: (string | Screenshot)[] | undefined;
@@ -131,16 +132,25 @@ export function ScreenshotManager({
 									<Label className='text-muted-foreground'>
 										Image URL
 									</Label>
-									<Input
-										value={screenshot.imageURL}
-										onChange={(e) =>
-											handleUpdate(index, {
-												imageURL: e.target.value,
-											})
-										}
-										placeholder='https://example.com/screenshot.png'
-										className='bg-card border-border text-foreground placeholder:text-muted-foreground'
-									/>
+									<div className='flex gap-2 items-center'>
+										<Input
+											value={screenshot.imageURL}
+											onChange={(e) =>
+												handleUpdate(index, {
+													imageURL: e.target.value,
+												})
+											}
+											placeholder='https://example.com/screenshot.png'
+											className='bg-card border-border text-foreground placeholder:text-muted-foreground flex-1'
+										/>
+										<ImageFileUpload
+											onUpload={(url) =>
+												handleUpdate(index, {
+													imageURL: url,
+												})
+											}
+										/>
+									</div>
 								</div>
 
 								<div className='grid grid-cols-2 gap-3'>
