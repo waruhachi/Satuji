@@ -176,8 +176,8 @@ function RouteComponent() {
 	);
 
 	return (
-		<main className='bg-background'>
-			<div className='flex max-h-screen'>
+		<main className='bg-background min-h-screen'>
+			<div className='flex h-screen min-h-screen overflow-hidden'>
 				{/* Sidebar Navigation */}
 				<BuilderSidebar
 					source={source}
@@ -192,7 +192,7 @@ function RouteComponent() {
 				/>
 
 				{/* Main Content Area */}
-				<div className='flex-1 flex overflow-hidden'>
+				<div className='flex-1 flex min-h-0 overflow-hidden'>
 					<BuilderContent
 						source={source}
 						activeSection={activeSection}

@@ -105,7 +105,7 @@ export function BuilderPreview({
 
 	return (
 		<div
-			className={`relative border-l border-sidebar-border bg-sidebar flex flex-col transition-all duration-300 ${isOpen ? 'w-105' : 'w-0'}`}
+			className={`relative border-l border-sidebar-border bg-sidebar flex flex-col min-h-0 transition-all duration-300 ${isOpen ? 'w-105' : 'w-0'}`}
 		>
 			{/* Toggle Button */}
 			<button
