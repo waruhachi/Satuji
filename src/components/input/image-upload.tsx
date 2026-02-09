@@ -38,11 +38,11 @@ export function ImageFileUpload({
 
 			toast.promise(uploadPromise, {
 				loading: 'Uploading image...',
-				success: (url) => {
+				success: (url: string) => {
 					onUpload(url);
 					return 'Image uploaded successfully';
 				},
-				error: (err) => {
+				error: (err: unknown) => {
 					const message =
 						err instanceof Error ? err.message : 'Upload failed';
 					const isNetworkError =

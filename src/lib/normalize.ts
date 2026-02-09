@@ -110,12 +110,14 @@ const normalizePermissions = (value: unknown): AppPermissions => {
 				(entry): entry is string => typeof entry === 'string',
 			)
 		:	[];
-	const privacy =
+	const privacy: Record<string, string> =
 		isRecord(record.privacy) ?
-			Object.fromEntries(
-				Object.entries(record.privacy).filter(
-					([, entry]) => typeof entry === 'string',
-				),
+			Object.entries(record.privacy).reduce<Record<string, string>>(
+				(acc, [key, entry]) => {
+					if (typeof entry === 'string') acc[key] = entry;
+					return acc;
+				},
+				{},
 			)
 		:	{};
 
