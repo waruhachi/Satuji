@@ -23,6 +23,43 @@ const defaultSource: AltSource = {
 	news: [],
 };
 
+const getValidationErrors = (source: AltSource): string[] => {
+	const errors: string[] = [];
+	if (!source.name.trim()) errors.push('Source name is required');
+	if (source.apps.length === 0) errors.push('At least one app is required');
+
+	source.apps.forEach((app, index) => {
+		if (!app.name.trim()) errors.push(`App ${index + 1}: Name is required`);
+		if (!app.bundleIdentifier.trim()) {
+			errors.push(`App ${index + 1}: Bundle identifier is required`);
+		}
+		if (!app.developerName.trim()) {
+			errors.push(`App ${index + 1}: Developer name is required`);
+		}
+		if (app.versions.length === 0) {
+			errors.push(`App ${index + 1}: At least one version is required`);
+		}
+		app.versions.forEach((version, versionIndex) => {
+			if (!version.date?.trim()) {
+				errors.push(
+					`App ${index + 1} Version ${versionIndex + 1}: Release date is required`,
+				);
+			}
+		});
+	});
+
+	source.news.forEach((item, index) => {
+		if (!item.date?.trim()) {
+			errors.push(`News ${index + 1}: Date is required`);
+		}
+	});
+
+	return errors;
+};
+
+const hasSameErrors = (a: string[], b: string[]): boolean =>
+	a.length === b.length && a.every((value, index) => value === b[index]);
+
 export const Route = createFileRoute('/builder')({
 	component: RouteComponent,
 });
@@ -94,37 +131,16 @@ function RouteComponent() {
 	}, [setSource, setValidationErrors, setActiveSection]);
 
 	const validateSource = useCallback(() => {
-		const errors: string[] = [];
-		if (!source.name.trim()) errors.push('Source name is required');
-		if (source.apps.length === 0)
-			errors.push('At least one app is required');
-		source.apps.forEach((app, index) => {
-			if (!app.name.trim())
-				errors.push(`App ${index + 1}: Name is required`);
-			if (!app.bundleIdentifier.trim())
-				errors.push(`App ${index + 1}: Bundle identifier is required`);
-			if (!app.developerName.trim())
-				errors.push(`App ${index + 1}: Developer name is required`);
-			if (app.versions.length === 0)
-				errors.push(
-					`App ${index + 1}: At least one version is required`,
-				);
-			app.versions.forEach((version, versionIndex) => {
-				if (!version.date?.trim()) {
-					errors.push(
-						`App ${index + 1} Version ${versionIndex + 1}: Release date is required`,
-					);
-				}
-			});
-		});
-		source.news.forEach((item, index) => {
-			if (!item.date?.trim()) {
-				errors.push(`News ${index + 1}: Date is required`);
-			}
-		});
-		setValidationErrors(errors);
+		const errors = getValidationErrors(source);
+		setValidationErrors((prev) =>
+			hasSameErrors(prev, errors) ? prev : errors,
+		);
 		return errors.length === 0;
 	}, [source, setValidationErrors]);
+
+	useEffect(() => {
+		validateSource();
+	}, [validateSource]);
 
 	const addApp = useCallback(() => {
 		const newApp: App = {
