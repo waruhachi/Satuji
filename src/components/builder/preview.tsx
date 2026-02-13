@@ -287,7 +287,7 @@ export function BuilderPreview({
 
 					{/* Code Preview */}
 					<div className='flex-1 overflow-auto p-4'>
-						<pre className='w-full h-full rounded-xl border border-border bg-card/30 p-4 font-mono text-xs leading-5 text-foreground whitespace-pre-wrap break-all'>
+						<pre className='w-full min-h-full rounded-xl border border-border bg-card/30 p-4 font-mono text-xs leading-5 text-foreground whitespace-pre-wrap break-all overflow-hidden'>
 							<code>
 								{highlightedJson.map((token, index) => (
 									<span
