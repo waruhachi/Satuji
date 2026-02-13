@@ -60,10 +60,15 @@ export default async function handler(request: Request) {
 		:	'json',
 	);
 
-	const upstream = await fetch('https://freeimage.host/api/1/upload', {
-		method: 'POST',
-		body: outbound,
-	});
+	let upstream: Response;
+	try {
+		upstream = await fetch('https://freeimage.host/api/1/upload', {
+			method: 'POST',
+			body: outbound,
+		});
+	} catch {
+		return jsonResponse('Upload service unavailable', 502);
+	}
 
 	return new Response(upstream.body, {
 		status: upstream.status,
