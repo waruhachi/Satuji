@@ -57,7 +57,16 @@ const tokenizeJson = (value: string): JsonToken[] => {
 
 		let type: JsonTokenType;
 		if (token.startsWith('"')) {
-			type = token.endsWith('"') && value.slice(index + token.length).trimStart().startsWith(':') ? 'key' : 'string';
+			type =
+				(
+					token.endsWith('"') &&
+					value
+						.slice(index + token.length)
+						.trimStart()
+						.startsWith(':')
+				) ?
+					'key'
+				:	'string';
 		} else if (token === 'true' || token === 'false') {
 			type = 'boolean';
 		} else if (token === 'null') {
@@ -140,7 +149,10 @@ export function BuilderPreview({
 		() => JSON.stringify(cleanedSource, null, 2),
 		[cleanedSource],
 	);
-	const highlightedJson = useMemo(() => tokenizeJson(jsonString), [jsonString]);
+	const highlightedJson = useMemo(
+		() => tokenizeJson(jsonString),
+		[jsonString],
+	);
 
 	const handleCopy = async () => {
 		try {
