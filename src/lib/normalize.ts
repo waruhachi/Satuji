@@ -130,10 +130,27 @@ const normalizePermissions = (value: unknown): AppPermissions => {
 const normalizeApp = (value: unknown): App => {
 	const record = isRecord(value) ? value : {};
 	const versions =
-		Array.isArray(record.versions) ?
-			record.versions.map(normalizeVersion)
+		Array.isArray(record.versions) ? record.versions.map(normalizeVersion)
+		: (
+			toString(record.version) ||
+			toString(record.versionDate || record.date) ||
+			toString(record.downloadURL)
+		) ?
+			[
+				normalizeVersion({
+					version: record.version,
+					date: record.versionDate ?? record.date ?? '',
+					downloadURL: record.downloadURL,
+					localizedDescription:
+						record.versionDescription ??
+						record.localizedDescription,
+					size: record.size,
+				}),
+			]
 		:	[];
-	const screenshots = normalizeScreenshots(record.screenshots);
+	const screenshots =
+		normalizeScreenshots(record.screenshots) ??
+		normalizeScreenshots(record.screenshotURLs);
 
 	return {
 		name: toString(record.name),
@@ -175,7 +192,9 @@ export const normalizeAltSource = (value: unknown): AltSource => {
 		description: toOptionalString(value.description),
 		iconURL: toOptionalString(value.iconURL),
 		headerURL: toOptionalString(value.headerURL),
-		website: toOptionalString(value.website),
+		website:
+			toOptionalString(value.website) ??
+			toOptionalString(value.sourceURL),
 		tintColor: toOptionalString(value.tintColor),
 		featuredApps:
 			Array.isArray(value.featuredApps) ?

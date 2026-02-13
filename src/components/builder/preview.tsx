@@ -14,6 +14,18 @@ import {
 import { toast } from 'sonner';
 
 import { Button } from '@ui/button';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+} from '@ui/select';
+import {
+	buildExportSource,
+	exportPlatformIcon,
+	exportPlatformLabel,
+	type ExportPlatform,
+} from '@lib/source-format';
 
 type JsonTokenType =
 	| 'key'
@@ -91,6 +103,8 @@ const tokenizeJson = (value: string): JsonToken[] => {
 interface JsonPreviewPanelProps {
 	source: AltSource;
 	validationErrors: string[];
+	exportPlatform: ExportPlatform;
+	onExportPlatformChange: (platform: ExportPlatform) => void;
 	isOpen: boolean;
 	onToggle: () => void;
 }
@@ -98,10 +112,16 @@ interface JsonPreviewPanelProps {
 export function BuilderPreview({
 	source,
 	validationErrors,
+	exportPlatform,
+	onExportPlatformChange,
 	isOpen,
 	onToggle,
 }: JsonPreviewPanelProps) {
 	const [copied, setCopied] = useState(false);
+	const exportSource = useMemo(
+		() => buildExportSource(source, exportPlatform),
+		[source, exportPlatform],
+	);
 
 	const cleanedSource = useMemo(() => {
 		const clean = (obj: unknown): unknown => {
@@ -142,8 +162,8 @@ export function BuilderPreview({
 			}
 			return obj;
 		};
-		return clean(source) || {};
-	}, [source]);
+		return clean(exportSource) || {};
+	}, [exportSource]);
 
 	const jsonString = useMemo(
 		() => JSON.stringify(cleanedSource, null, 2),
@@ -169,9 +189,10 @@ export function BuilderPreview({
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = `${source.name || 'source'}.json`
-			.replace(/\s+/g, '-')
-			.toLowerCase();
+		a.download =
+			`${source.name || 'source'}-${exportPlatformLabel(exportPlatform)}.json`
+				.replace(/\s+/g, '-')
+				.toLowerCase();
 		document.body.appendChild(a);
 		a.click();
 		document.body.removeChild(a);
@@ -224,6 +245,63 @@ export function BuilderPreview({
 								</div>
 							</div>
 							<div className='flex items-center gap-1'>
+								<Select
+									value={exportPlatform}
+									onValueChange={(value) =>
+										onExportPlatformChange(
+											value as ExportPlatform,
+										)
+									}
+								>
+									<SelectTrigger
+										size='sm'
+										className='h-8 min-w-30 text-xs px-2'
+										aria-label='Export platform'
+									>
+										<span className='flex items-center gap-2 truncate'>
+											<img
+												src={exportPlatformIcon(
+													exportPlatform,
+												)}
+												alt=''
+												aria-hidden='true'
+												className='w-4 h-4 rounded-sm object-cover'
+											/>
+											<span>
+												{exportPlatformLabel(
+													exportPlatform,
+												)}
+											</span>
+										</span>
+									</SelectTrigger>
+										<SelectContent
+											align='end'
+											className='bg-card border border-border text-foreground ring-border/40 shadow-xl'
+										>
+											<SelectItem
+												value='altstore'
+											className='text-xs'
+										>
+											<img
+												src={exportPlatformIcon('altstore')}
+												alt='AltStore'
+												className='w-4 h-4 rounded-sm object-cover'
+											/>
+											<span>AltStore</span>
+										</SelectItem>
+										<SelectItem
+											value='sidestore'
+											className='text-xs'
+										>
+											<img
+												src={exportPlatformIcon('sidestore')}
+												alt='SideStore'
+												className='w-4 h-4 rounded-sm object-cover'
+											/>
+											<span>SideStore</span>
+										</SelectItem>
+									</SelectContent>
+								</Select>
 								<Button
 									variant='ghost'
 									size='sm'

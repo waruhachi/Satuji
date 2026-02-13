@@ -8,6 +8,7 @@ import { BuilderSidebar } from '@components/builder/sidebar';
 import { BuilderContent } from '@components/builder/content';
 import { BuilderPreview } from '@components/builder/preview';
 import { needsNormalization, normalizeAltSource } from '@lib/normalize';
+import type { ExportPlatform } from '@lib/source-format';
 import { toLocalISODate } from '@lib/utils';
 
 const defaultSource: AltSource = {
@@ -23,10 +24,16 @@ const defaultSource: AltSource = {
 	news: [],
 };
 
-const getValidationErrors = (source: AltSource): string[] => {
+const getValidationErrors = (
+	source: AltSource,
+	exportPlatform: ExportPlatform,
+): string[] => {
 	const errors: string[] = [];
 	if (!source.name.trim()) errors.push('Source name is required');
 	if (source.apps.length === 0) errors.push('At least one app is required');
+	if (exportPlatform === 'sidestore' && !source.website?.trim()) {
+		errors.push('Website URL is required for SideStore exports');
+	}
 
 	source.apps.forEach((app, index) => {
 		if (!app.name.trim()) errors.push(`App ${index + 1}: Name is required`);
@@ -43,6 +50,16 @@ const getValidationErrors = (source: AltSource): string[] => {
 			if (!version.date?.trim()) {
 				errors.push(
 					`App ${index + 1} Version ${versionIndex + 1}: Release date is required`,
+				);
+			}
+			if (exportPlatform === 'sidestore' && !version.version.trim()) {
+				errors.push(
+					`App ${index + 1} Version ${versionIndex + 1}: Version is required for SideStore exports`,
+				);
+			}
+			if (exportPlatform === 'sidestore' && !version.downloadURL.trim()) {
+				errors.push(
+					`App ${index + 1} Version ${versionIndex + 1}: Download URL is required for SideStore exports`,
 				);
 			}
 		});
@@ -80,6 +97,10 @@ function RouteComponent() {
 	const [showPreview, setShowPreview] = useLocalStorage<boolean>(
 		'altsource-show-preview',
 		true,
+	);
+	const [exportPlatform, setExportPlatform] = useLocalStorage<ExportPlatform>(
+		'altsource-export-platform',
+		'altstore',
 	);
 
 	useEffect(() => {
@@ -131,12 +152,12 @@ function RouteComponent() {
 	}, [setSource, setValidationErrors, setActiveSection]);
 
 	const validateSource = useCallback(() => {
-		const errors = getValidationErrors(source);
+		const errors = getValidationErrors(source, exportPlatform);
 		setValidationErrors((prev) =>
 			hasSameErrors(prev, errors) ? prev : errors,
 		);
 		return errors.length === 0;
-	}, [source, setValidationErrors]);
+	}, [source, exportPlatform, setValidationErrors]);
 
 	useEffect(() => {
 		validateSource();
@@ -226,6 +247,8 @@ function RouteComponent() {
 					<BuilderPreview
 						source={source}
 						validationErrors={validationErrors}
+						exportPlatform={exportPlatform}
+						onExportPlatformChange={setExportPlatform}
 						isOpen={showPreview}
 						onToggle={() => setShowPreview(!showPreview)}
 					/>
