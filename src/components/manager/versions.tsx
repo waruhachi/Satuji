@@ -20,6 +20,7 @@ import {
 	CollapsibleTrigger,
 } from '@ui/collapsible';
 import { createId } from '@lib/ids';
+import { toLocalISODate } from '@lib/utils';
 
 interface VersionManagerProps {
 	versions: AppVersion[];
@@ -29,7 +30,7 @@ interface VersionManagerProps {
 const createDefaultVersion = (): AppVersion => ({
 	__id: createId(),
 	version: '',
-	date: new Date().toISOString().split('T')[0],
+	date: toLocalISODate(),
 	size: 0,
 	downloadURL: '',
 	localizedDescription: '',

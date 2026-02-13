@@ -8,6 +8,7 @@ import { BuilderSidebar } from '@components/builder/sidebar';
 import { BuilderContent } from '@components/builder/content';
 import { BuilderPreview } from '@components/builder/preview';
 import { needsNormalization, normalizeAltSource } from '@lib/normalize';
+import { toLocalISODate } from '@lib/utils';
 
 const defaultSource: AltSource = {
 	name: '',
@@ -148,7 +149,7 @@ function RouteComponent() {
 			title: '',
 			identifier: `news_${Date.now()}`,
 			caption: '',
-			date: new Date().toISOString().split('T')[0],
+			date: toLocalISODate(),
 			tintColor: '#6366f1',
 			notify: false,
 		};
