@@ -1,4 +1,5 @@
 import type { App } from '@lib/types';
+import type { KeyboardEvent } from 'react';
 
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
@@ -30,6 +31,15 @@ export function AppsOverview({
 	onDeleteApp,
 	onDuplicateApp,
 }: AppsOverviewProps) {
+	const handleCardKeyDown = (
+		event: KeyboardEvent<HTMLDivElement>,
+		index: number,
+	) => {
+		if (event.key !== 'Enter' && event.key !== ' ') return;
+		event.preventDefault();
+		onSelectApp(index);
+	};
+
 	return (
 		<div className='space-y-6'>
 			{/* Header */}
@@ -77,6 +87,12 @@ export function AppsOverview({
 							key={`app-${index}`}
 							className='flex items-center gap-4 p-4 rounded-xl bg-card/50 border border-border hover:border-accent transition-colors group cursor-pointer'
 							onClick={() => onSelectApp(index)}
+							onKeyDown={(event) =>
+								handleCardKeyDown(event, index)
+							}
+							tabIndex={0}
+							role='button'
+							aria-label={`Edit ${app.name || 'app'}`}
 						>
 							{app.iconURL ?
 								<img

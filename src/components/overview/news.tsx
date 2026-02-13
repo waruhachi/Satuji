@@ -1,4 +1,5 @@
 import type { NewsItem } from '@lib/types';
+import type { KeyboardEvent } from 'react';
 
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
@@ -31,6 +32,15 @@ export function NewsOverview({
 	onDeleteNews,
 	onDuplicateNews,
 }: NewsOverviewProps) {
+	const handleCardKeyDown = (
+		event: KeyboardEvent<HTMLDivElement>,
+		index: number,
+	) => {
+		if (event.key !== 'Enter' && event.key !== ' ') return;
+		event.preventDefault();
+		onSelectNews(index);
+	};
+
 	return (
 		<div className='space-y-6'>
 			{/* Header */}
@@ -78,6 +88,12 @@ export function NewsOverview({
 							key={`news-${index}`}
 							className='flex items-center gap-4 p-4 rounded-xl bg-card/50 border border-border hover:border-accent transition-colors group cursor-pointer'
 							onClick={() => onSelectNews(index)}
+							onKeyDown={(event) =>
+								handleCardKeyDown(event, index)
+							}
+							tabIndex={0}
+							role='button'
+							aria-label={`Edit ${item.title || 'news item'}`}
 						>
 							<div
 								className='w-3 h-12 rounded-full shrink-0'
