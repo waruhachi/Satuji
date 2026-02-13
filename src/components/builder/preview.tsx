@@ -1,8 +1,6 @@
 import type { AltSource } from '@lib/types';
 
 import { useState, useMemo } from 'react';
-import ShikiHighlighter from 'react-shiki/web';
-import type { ThemeRegistrationAny } from 'shiki';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
 	Copy01Icon,
@@ -13,13 +11,73 @@ import {
 	ArrowRight01Icon,
 	ArrowLeft01Icon,
 } from '@hugeicons/core-free-icons';
+import { toast } from 'sonner';
 
 import { Button } from '@ui/button';
-import auroraLight from '@assets/aurora-light.json';
-import auroraDark from '@assets/aurora-dark.json';
 
-const auroraLightTheme = auroraLight as ThemeRegistrationAny;
-const auroraDarkTheme = auroraDark as ThemeRegistrationAny;
+type JsonTokenType =
+	| 'key'
+	| 'string'
+	| 'number'
+	| 'boolean'
+	| 'null'
+	| 'punctuation';
+
+interface JsonToken {
+	text: string;
+	type?: JsonTokenType;
+}
+
+const JSON_TOKEN_PATTERN =
+	/"(?:\\.|[^"\\])*"(?=\s*:)|"(?:\\.|[^"\\])*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|\btrue\b|\bfalse\b|\bnull\b|[{}[\],:]/g;
+
+const JSON_TOKEN_CLASS: Record<JsonTokenType, string> = {
+	key: 'text-primary font-medium',
+	string: 'text-chart-3',
+	number: 'text-chart-5',
+	boolean: 'text-chart-4',
+	null: 'text-muted-foreground italic',
+	punctuation: 'text-foreground/80',
+};
+
+const tokenizeJson = (value: string): JsonToken[] => {
+	const tokens: JsonToken[] = [];
+	let lastIndex = 0;
+	let match: RegExpExecArray | null;
+
+	JSON_TOKEN_PATTERN.lastIndex = 0;
+
+	while ((match = JSON_TOKEN_PATTERN.exec(value)) !== null) {
+		const [token] = match;
+		const index = match.index;
+
+		if (index > lastIndex) {
+			tokens.push({ text: value.slice(lastIndex, index) });
+		}
+
+		let type: JsonTokenType;
+		if (token.startsWith('"')) {
+			type = token.endsWith('"') && value.slice(index + token.length).trimStart().startsWith(':') ? 'key' : 'string';
+		} else if (token === 'true' || token === 'false') {
+			type = 'boolean';
+		} else if (token === 'null') {
+			type = 'null';
+		} else if (/^-?\d/.test(token)) {
+			type = 'number';
+		} else {
+			type = 'punctuation';
+		}
+
+		tokens.push({ text: token, type });
+		lastIndex = index + token.length;
+	}
+
+	if (lastIndex < value.length) {
+		tokens.push({ text: value.slice(lastIndex) });
+	}
+
+	return tokens;
+};
 
 interface JsonPreviewPanelProps {
 	source: AltSource;
@@ -82,11 +140,16 @@ export function BuilderPreview({
 		() => JSON.stringify(cleanedSource, null, 2),
 		[cleanedSource],
 	);
+	const highlightedJson = useMemo(() => tokenizeJson(jsonString), [jsonString]);
 
 	const handleCopy = async () => {
-		await navigator.clipboard.writeText(jsonString);
-		setCopied(true);
-		setTimeout(() => setCopied(false), 2000);
+		try {
+			await navigator.clipboard.writeText(jsonString);
+			setCopied(true);
+			setTimeout(() => setCopied(false), 2000);
+		} catch {
+			toast.error('Unable to copy JSON');
+		}
 	};
 
 	const handleDownload = () => {
@@ -212,17 +275,22 @@ export function BuilderPreview({
 
 					{/* Code Preview */}
 					<div className='flex-1 overflow-auto p-4'>
-						<ShikiHighlighter
-							language='json'
-							theme={{
-								light: auroraLightTheme,
-								dark: auroraDarkTheme,
-							}}
-							defaultColor='light-dark()'
-							showLineNumbers
-						>
-							{jsonString.trim()}
-						</ShikiHighlighter>
+						<pre className='w-full h-full rounded-xl border border-border bg-card/30 p-4 font-mono text-xs leading-5 text-foreground whitespace-pre-wrap break-all'>
+							<code>
+								{highlightedJson.map((token, index) => (
+									<span
+										key={`${index}-${token.type ?? 'plain'}`}
+										className={
+											token.type ?
+												JSON_TOKEN_CLASS[token.type]
+											:	undefined
+										}
+									>
+										{token.text}
+									</span>
+								))}
+							</code>
+						</pre>
 					</div>
 
 					{/* Footer Stats */}
