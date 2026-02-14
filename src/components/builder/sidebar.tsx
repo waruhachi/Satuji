@@ -33,8 +33,10 @@ import {
 
 import { ImageUploadSettings } from '@components/manager/images';
 import { normalizeAltSource } from '@lib/normalize';
+import { cn } from '@lib/utils';
 
 interface BuilderSidebarProps {
+	mode?: 'desktop' | 'mobile';
 	source: AltSource;
 	activeSection: SectionID;
 	onSectionChange: (section: SectionID) => void;
@@ -47,6 +49,7 @@ interface BuilderSidebarProps {
 }
 
 export function BuilderSidebar({
+	mode = 'desktop',
 	source,
 	activeSection,
 	onSectionChange,
@@ -57,6 +60,7 @@ export function BuilderSidebar({
 	onValidate,
 	validationErrors,
 }: BuilderSidebarProps) {
+	const isMobile = mode === 'mobile';
 	const [appsExpanded, setAppsExpanded] = useState(true);
 	const [newsExpanded, setNewsExpanded] = useState(true);
 	const [resetDialogOpen, setResetDialogOpen] = useState(false);
@@ -110,7 +114,14 @@ export function BuilderSidebar({
 	const completion = getCompletionStatus();
 
 	return (
-		<aside className='w-72 border-r border-sidebar-border bg-sidebar flex flex-col shrink-0'>
+		<aside
+			className={cn(
+				'bg-sidebar flex flex-col min-h-0',
+				isMobile ?
+					'w-full h-full border-r-0'
+				:	'w-72 border-r border-sidebar-border shrink-0',
+			)}
+		>
 			{/* Header */}
 			<div className='p-4 border-b border-border'>
 				{/* Progress Indicator */}

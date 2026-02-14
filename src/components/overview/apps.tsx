@@ -83,9 +83,9 @@ export function AppsOverview({
 				</div>
 			:	<div className='grid gap-3'>
 					{apps.map((app, index) => (
-						<div
-							key={`app-${index}`}
-							className='flex items-center gap-4 p-4 rounded-xl bg-card/50 border border-border hover:border-accent transition-colors group cursor-pointer'
+							<div
+								key={`app-${index}`}
+								className='flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-card/50 border border-border hover:border-accent transition-colors group cursor-pointer'
 							onClick={() => onSelectApp(index)}
 							onKeyDown={(event) =>
 								handleCardKeyDown(event, index)
@@ -139,10 +139,10 @@ export function AppsOverview({
 								</div>
 							</div>
 
-							<div
-								className='flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity'
-								onClick={(e) => e.stopPropagation()}
-							>
+								<div
+									className='self-end sm:self-auto flex items-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity'
+									onClick={(e) => e.stopPropagation()}
+								>
 								<Button
 									variant='ghost'
 									size='sm'

@@ -14,10 +14,10 @@ export const AuroraBackground = ({
 	...props
 }: AuroraBackgroundProps) => {
 	return (
-		<main>
+		<main className='h-[100dvh] overflow-hidden'>
 			<div
 				className={cn(
-					'transition-bg relative flex h-screen flex-col items-center justify-center bg-background text-foreground',
+					'transition-bg relative flex h-[100dvh] flex-col items-center justify-center overflow-hidden bg-background text-foreground',
 					className,
 				)}
 				{...props}

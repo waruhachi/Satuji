@@ -1,13 +1,27 @@
 import type { AltSource, App, NewsItem, SectionID } from '@lib/types';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocalStorage } from '@uidotdev/usehooks';
 import { createFileRoute } from '@tanstack/react-router';
+import { HugeiconsIcon } from '@hugeicons/react';
+import {
+	Menu01Icon,
+	CodeSimpleIcon,
+	Cancel01Icon,
+} from '@hugeicons/core-free-icons';
 
 import { BuilderSidebar } from '@components/builder/sidebar';
 import { BuilderContent } from '@components/builder/content';
 import { BuilderPreview } from '@components/builder/preview';
 import { needsNormalization, normalizeAltSource } from '@lib/normalize';
+import { Button } from '@ui/button';
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from '@ui/dialog';
 import type { ExportPlatform } from '@lib/source-format';
 import { toLocalISODate } from '@lib/utils';
 
@@ -82,6 +96,8 @@ export const Route = createFileRoute('/builder')({
 });
 
 function RouteComponent() {
+	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+	const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
 	const [source, setSource] = useLocalStorage<AltSource>(
 		'altsource-builder-state',
 		defaultSource,
@@ -213,9 +229,47 @@ function RouteComponent() {
 		[source.news, updateNews, setActiveSection],
 	);
 
+	const activeSectionLabel = useMemo(() => {
+		if (activeSection === 'source') return 'Source Info';
+		if (activeSection === 'apps') return 'Apps';
+		if (activeSection === 'news') return 'News';
+
+		if (activeSection.startsWith('app-')) {
+			const index = Number.parseInt(activeSection.replace('app-', ''), 10);
+			const appName = source.apps[index]?.name;
+			return appName ? `App: ${appName}` : `App ${index + 1}`;
+		}
+
+		if (activeSection.startsWith('news-')) {
+			const index = Number.parseInt(activeSection.replace('news-', ''), 10);
+			const newsTitle = source.news[index]?.title;
+			return newsTitle ? `News: ${newsTitle}` : `News ${index + 1}`;
+		}
+
+		return 'Editor';
+	}, [activeSection, source.apps, source.news]);
+
+	const handleMobileSectionChange = useCallback(
+		(section: SectionID) => {
+			setActiveSection(section);
+			setMobileSidebarOpen(false);
+		},
+		[setActiveSection],
+	);
+
+	const handleMobileAddApp = useCallback(() => {
+		addApp();
+		setMobileSidebarOpen(false);
+	}, [addApp]);
+
+	const handleMobileAddNews = useCallback(() => {
+		addNews();
+		setMobileSidebarOpen(false);
+	}, [addNews]);
+
 	return (
-		<main className='bg-background min-h-screen'>
-			<div className='flex h-screen min-h-screen overflow-hidden'>
+		<main className='bg-background min-h-[100dvh]'>
+			<div className='hidden md:flex h-screen min-h-screen overflow-hidden'>
 				{/* Sidebar Navigation */}
 				<BuilderSidebar
 					source={source}
@@ -254,6 +308,150 @@ function RouteComponent() {
 					/>
 				</div>
 			</div>
+
+			<div className='md:hidden flex min-h-[100dvh] flex-col'>
+				<header className='sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80'>
+					<div className='flex items-center gap-2 px-3 py-2'>
+						<Button
+							variant='outline'
+							size='sm'
+							onClick={() => setMobileSidebarOpen(true)}
+							className='gap-2 bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-muted'
+						>
+							<HugeiconsIcon
+								icon={Menu01Icon}
+								size={16}
+							/>
+							Sections
+						</Button>
+
+						<div className='min-w-0 flex-1 text-center'>
+							<p className='text-[11px] leading-4 text-muted-foreground'>
+								Editing
+							</p>
+							<p className='truncate text-sm font-medium text-foreground'>
+								{activeSectionLabel}
+							</p>
+						</div>
+
+						<Button
+							variant='outline'
+							size='sm'
+							onClick={() => setMobilePreviewOpen(true)}
+							className='gap-2 bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-muted'
+						>
+							<HugeiconsIcon
+								icon={CodeSimpleIcon}
+								size={16}
+							/>
+							JSON
+						</Button>
+					</div>
+				</header>
+
+				<div className='flex-1 min-h-0 overflow-y-auto'>
+					<BuilderContent
+						source={source}
+						activeSection={activeSection}
+						onUpdateSource={updateSourceMetadata}
+						onUpdateApps={updateApps}
+						onUpdateNews={updateNews}
+						onUpdateFeaturedApps={updateFeaturedApps}
+						onDeleteApp={deleteApp}
+						onDeleteNews={deleteNews}
+						onSectionChange={setActiveSection}
+					/>
+				</div>
+			</div>
+
+			<Dialog
+				open={mobileSidebarOpen}
+				onOpenChange={setMobileSidebarOpen}
+			>
+				<DialogContent
+					showCloseButton={false}
+					overlayClassName='bg-transparent supports-backdrop-filter:backdrop-blur-none duration-300 ease-out'
+					className='top-0 left-0 h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 rounded-none border-0 p-0 gap-0 grid-rows-[auto_1fr] transform-gpu will-change-transform duration-300 ease-out data-open:[--tw-enter-translate-x:-100%] data-open:[--tw-enter-scale:1] data-open:[--tw-enter-opacity:1] data-closed:[--tw-exit-translate-x:-100%] data-closed:[--tw-exit-scale:1] data-closed:[--tw-exit-opacity:1]'
+				>
+					<DialogHeader className='px-4 py-3 border-b border-sidebar-border bg-sidebar'>
+						<div className='flex items-center justify-between gap-2'>
+							<DialogTitle>Sections</DialogTitle>
+							<DialogClose
+								render={
+									<Button
+										variant='ghost'
+										size='icon-sm'
+										className='text-muted-foreground hover:text-foreground hover:bg-muted'
+									/>
+								}
+							>
+								<HugeiconsIcon
+									icon={Cancel01Icon}
+									size={20}
+								/>
+								<span className='sr-only'>Close</span>
+							</DialogClose>
+						</div>
+					</DialogHeader>
+					<div className='min-h-0 flex-1 overflow-hidden'>
+						<BuilderSidebar
+							mode='mobile'
+							source={source}
+							activeSection={activeSection}
+							onSectionChange={handleMobileSectionChange}
+							onAddApp={handleMobileAddApp}
+							onAddNews={handleMobileAddNews}
+							onImport={handleImport}
+							onReset={handleReset}
+							onValidate={validateSource}
+							validationErrors={validationErrors}
+						/>
+					</div>
+				</DialogContent>
+			</Dialog>
+
+			<Dialog
+				open={mobilePreviewOpen}
+				onOpenChange={setMobilePreviewOpen}
+			>
+				<DialogContent
+					showCloseButton={false}
+					overlayClassName='bg-transparent supports-backdrop-filter:backdrop-blur-none duration-300 ease-out'
+					className='top-0 left-0 h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 rounded-none border-0 p-0 gap-0 grid-rows-[auto_1fr] transform-gpu will-change-transform duration-300 ease-out data-open:[--tw-enter-translate-x:100%] data-open:[--tw-enter-scale:1] data-open:[--tw-enter-opacity:1] data-closed:[--tw-exit-translate-x:100%] data-closed:[--tw-exit-scale:1] data-closed:[--tw-exit-opacity:1]'
+				>
+					<DialogHeader className='px-4 py-3 border-b border-sidebar-border bg-sidebar'>
+						<div className='flex items-center justify-between gap-2'>
+							<DialogTitle>JSON Output</DialogTitle>
+							<DialogClose
+								render={
+									<Button
+										variant='ghost'
+										size='icon-sm'
+										className='text-muted-foreground hover:text-foreground hover:bg-muted'
+									/>
+								}
+							>
+								<HugeiconsIcon
+									icon={Cancel01Icon}
+									size={20}
+								/>
+								<span className='sr-only'>Close</span>
+							</DialogClose>
+						</div>
+					</DialogHeader>
+					<div className='min-h-0 flex-1 overflow-hidden'>
+						<BuilderPreview
+							mode='mobile'
+							source={source}
+							validationErrors={validationErrors}
+							exportPlatform={exportPlatform}
+							onExportPlatformChange={setExportPlatform}
+							isOpen
+							onToggle={() => setMobilePreviewOpen(false)}
+						/>
+					</div>
+				</DialogContent>
+			</Dialog>
 		</main>
 	);
 }

@@ -2,14 +2,14 @@ import { useNavigate } from '@tanstack/react-router';
 
 import { Button } from '@ui/button';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowRight02Icon } from '@hugeicons/core-free-icons';
+import { ArrowRight02Icon, GithubIcon } from '@hugeicons/core-free-icons';
 import { FlipWords } from '@components/visual/flip-words';
 
 export function Hero() {
 	const navigate = useNavigate();
 
 	return (
-		<section className='relative min-h-screen overflow-hidden flex items-center justify-center select-none'>
+		<section className='relative h-full min-h-0 overflow-hidden flex items-center justify-center select-none'>
 			<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-accent/5 rounded-full blur-3xl' />
 
 			<div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
@@ -37,10 +37,10 @@ export function Hero() {
 						visual interface, and export clean, optimized JSON.
 					</p>
 
-					<div className='mt-10 flex flex-col sm:flex-row items-center gap-4'>
-						<Button
-							size='lg'
-							className='gap-2 h-12 px-6'
+						<div className='mt-10 flex flex-col sm:flex-row items-center gap-4'>
+							<Button
+								size='lg'
+								className='gap-2 h-12 px-6'
 							onClick={() => navigate({ to: '/builder' })}
 						>
 							Start Building
@@ -48,10 +48,16 @@ export function Hero() {
 								icon={ArrowRight02Icon}
 								size={16}
 							/>
+							</Button>
+						</div>
+					</div>
+				</div>
+
 						</Button>
 					</div>
 				</div>
 			</div>
 		</section>
+			</section>
 	);
 }

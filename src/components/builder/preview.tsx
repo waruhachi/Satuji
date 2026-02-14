@@ -26,6 +26,7 @@ import {
 	exportPlatformLabel,
 	type ExportPlatform,
 } from '@lib/source-format';
+import { cn } from '@lib/utils';
 
 type JsonTokenType =
 	| 'key'
@@ -101,6 +102,7 @@ const tokenizeJson = (value: string): JsonToken[] => {
 };
 
 interface JsonPreviewPanelProps {
+	mode?: 'desktop' | 'mobile';
 	source: AltSource;
 	validationErrors: string[];
 	exportPlatform: ExportPlatform;
@@ -110,6 +112,7 @@ interface JsonPreviewPanelProps {
 }
 
 export function BuilderPreview({
+	mode = 'desktop',
 	source,
 	validationErrors,
 	exportPlatform,
@@ -117,6 +120,8 @@ export function BuilderPreview({
 	isOpen,
 	onToggle,
 }: JsonPreviewPanelProps) {
+	const isDesktop = mode === 'desktop';
+	const shouldShowPanel = isDesktop ? isOpen : true;
 	const [copied, setCopied] = useState(false);
 	const exportSource = useMemo(
 		() => buildExportSource(source, exportPlatform),
@@ -201,27 +206,33 @@ export function BuilderPreview({
 
 	return (
 		<div
-			className={`relative border-l border-sidebar-border bg-sidebar flex flex-col min-h-0 transition-all duration-300 ${isOpen ? 'w-105' : 'w-0'}`}
+			className={cn(
+				'bg-sidebar flex flex-col min-h-0 overflow-hidden',
+				isDesktop && 'relative border-l border-sidebar-border transition-all duration-300',
+				isDesktop && (isOpen ? 'w-105' : 'w-0'),
+				!isDesktop && 'w-full h-full',
+			)}
 		>
-			{/* Toggle Button */}
-			<button
-				onClick={onToggle}
-				className='absolute -left-10 top-4 w-10 h-10 rounded-l-lg bg-card border border-r-0 border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors z-10'
-				title={isOpen ? 'Hide JSON Preview' : 'Show JSON Preview'}
-			>
-				{isOpen ?
-					<HugeiconsIcon
-						icon={ArrowRight01Icon}
-						size={16}
-					/>
-				:	<HugeiconsIcon
-						icon={ArrowLeft01Icon}
-						size={16}
-					/>
-				}
-			</button>
+			{isDesktop && (
+				<button
+					onClick={onToggle}
+					className='absolute -left-10 top-4 w-10 h-10 rounded-l-lg bg-card border border-r-0 border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors z-10'
+					title={isOpen ? 'Hide JSON Preview' : 'Show JSON Preview'}
+				>
+					{isOpen ?
+						<HugeiconsIcon
+							icon={ArrowRight01Icon}
+							size={16}
+						/>
+					:	<HugeiconsIcon
+							icon={ArrowLeft01Icon}
+							size={16}
+						/>
+					}
+				</button>
+			)}
 
-			{isOpen && (
+			{shouldShowPanel && (
 				<>
 					{/* Header */}
 					<div className='p-4 border-b border-sidebar-border shrink-0'>
@@ -255,7 +266,7 @@ export function BuilderPreview({
 								>
 									<SelectTrigger
 										size='sm'
-										className='h-8 min-w-30 text-xs px-2'
+										className='h-8 min-w-24 sm:min-w-30 text-xs px-2'
 										aria-label='Export platform'
 									>
 										<span className='flex items-center gap-2 truncate'>

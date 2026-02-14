@@ -48,13 +48,13 @@ export function NewsEditor({
 	};
 
 	return (
-		<div className='space-y-6'>
-			{/* Header */}
-			<div className='flex items-start justify-between'>
-				<div className='flex items-center gap-4'>
-					<div
-						className='w-16 h-16 rounded-2xl flex items-center justify-center'
-						style={{ backgroundColor: item.tintColor || '#6366f1' }}
+			<div className='space-y-6'>
+				{/* Header */}
+				<div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
+					<div className='flex items-center gap-3 sm:gap-4 min-w-0'>
+						<div
+							className='w-16 h-16 rounded-2xl flex items-center justify-center'
+							style={{ backgroundColor: item.tintColor || '#6366f1' }}
 					>
 						<HugeiconsIcon
 							icon={NewsIcon}
@@ -62,34 +62,34 @@ export function NewsEditor({
 							className='text-foreground'
 						/>
 					</div>
-					<div>
-						<h1 className='text-2xl font-bold text-foreground'>
-							{item.title || 'Untitled News'}
-						</h1>
-						<p className='text-muted-foreground text-sm'>
-							{item.date}
-						</p>
+						<div className='min-w-0'>
+							<h1 className='text-xl sm:text-2xl font-bold text-foreground truncate'>
+								{item.title || 'Untitled News'}
+							</h1>
+							<p className='text-muted-foreground text-xs sm:text-sm truncate'>
+								{item.date}
+							</p>
+						</div>
 					</div>
-				</div>
-				<div className='flex items-center gap-2'>
-					<Button
-						variant='outline'
-						size='sm'
-						onClick={onDuplicate}
-						className='gap-2 bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-muted'
-					>
+					<div className='flex items-center gap-2 w-full sm:w-auto'>
+						<Button
+							variant='outline'
+							size='sm'
+							onClick={onDuplicate}
+							className='flex-1 sm:flex-none gap-2 bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-muted'
+						>
 						<HugeiconsIcon
 							icon={Copy01Icon}
 							size={16}
 						/>
 						Duplicate
 					</Button>
-					<Button
-						variant='outline'
-						size='sm'
-						onClick={onDelete}
-						className='gap-2 bg-transparent border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive/50'
-					>
+						<Button
+							variant='outline'
+							size='sm'
+							onClick={onDelete}
+							className='flex-1 sm:flex-none gap-2 bg-transparent border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive/50'
+						>
 						<HugeiconsIcon
 							icon={Delete02Icon}
 							size={16}
@@ -226,8 +226,8 @@ export function NewsEditor({
 					</div>
 				</div>
 
-				<div className='flex items-center justify-between p-4 rounded-lg bg-muted/50 border border-accent'>
-					<div className='flex items-center gap-3'>
+					<div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 rounded-lg bg-muted/50 border border-accent'>
+						<div className='flex items-center gap-3'>
 						<div className='w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center'>
 							<HugeiconsIcon
 								icon={Notification01Icon}
@@ -244,13 +244,15 @@ export function NewsEditor({
 							</p>
 						</div>
 					</div>
-					<Switch
-						checked={item.notify || false}
-						onCheckedChange={(checked) =>
-							updateField('notify', checked)
-						}
-					/>
-				</div>
+						<div className='self-end sm:self-auto'>
+							<Switch
+								checked={item.notify || false}
+								onCheckedChange={(checked) =>
+									updateField('notify', checked)
+								}
+							/>
+						</div>
+					</div>
 			</div>
 		</div>
 	);
