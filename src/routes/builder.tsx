@@ -271,17 +271,17 @@ function RouteComponent() {
 		<main className='bg-background min-h-[100dvh]'>
 			<div className='hidden md:flex h-screen min-h-screen overflow-hidden'>
 				{/* Sidebar Navigation */}
-				<BuilderSidebar
-					source={source}
-					activeSection={activeSection}
-					onSectionChange={setActiveSection}
-					onAddApp={addApp}
-					onAddNews={addNews}
-					onImport={handleImport}
-					onReset={handleReset}
-					onValidate={validateSource}
-					validationErrors={validationErrors}
-				/>
+					<BuilderSidebar
+						source={source}
+						activeSection={activeSection}
+						onSectionChange={setActiveSection}
+						onAddApp={addApp}
+						onAddNews={addNews}
+						onImport={handleImport}
+						onReset={handleReset}
+						onValidate={validateSource}
+						validationErrors={validationErrors}
+					/>
 
 				{/* Main Content Area */}
 				<div className='flex-1 flex min-h-0 overflow-hidden'>

@@ -205,22 +205,26 @@ export function BuilderPreview({
 	};
 
 	return (
-		<div
-			className={cn(
-				'bg-sidebar flex flex-col min-h-0 overflow-hidden',
-				isDesktop && 'relative border-l border-sidebar-border transition-all duration-300',
-				isDesktop && (isOpen ? 'w-105' : 'w-0'),
-				!isDesktop && 'w-full h-full',
-			)}
-		>
-			{isDesktop && (
-				<button
-					onClick={onToggle}
-					className='absolute -left-10 top-4 w-10 h-10 rounded-l-lg bg-card border border-r-0 border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors z-10'
-					title={isOpen ? 'Hide JSON Preview' : 'Show JSON Preview'}
-				>
-					{isOpen ?
-						<HugeiconsIcon
+			<div
+				className={cn(
+					'bg-sidebar flex flex-col min-h-0',
+					isDesktop && 'relative border-l border-sidebar-border transition-all duration-300',
+					isDesktop && (isOpen ? 'w-105' : 'w-0'),
+					isDesktop && 'overflow-visible',
+					!isDesktop && 'w-full h-full overflow-hidden',
+				)}
+			>
+					{isDesktop && (
+						<Button
+							variant='outline'
+							size='icon-sm'
+							onClick={onToggle}
+							className='absolute -left-7 top-6 h-14 w-7 rounded-l-xl rounded-r-none border-r-0 border-border bg-card/95 text-muted-foreground hover:text-foreground hover:bg-muted z-20 shadow-sm'
+							title={isOpen ? 'Hide JSON Preview' : 'Show JSON Preview'}
+							aria-label={isOpen ? 'Hide JSON Preview' : 'Show JSON Preview'}
+						>
+						{isOpen ?
+							<HugeiconsIcon
 							icon={ArrowRight01Icon}
 							size={16}
 						/>
@@ -228,9 +232,9 @@ export function BuilderPreview({
 							icon={ArrowLeft01Icon}
 							size={16}
 						/>
-					}
-				</button>
-			)}
+						}
+					</Button>
+				)}
 
 			{shouldShowPanel && (
 				<>
