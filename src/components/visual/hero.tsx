@@ -53,11 +53,25 @@ export function Hero() {
 					</div>
 				</div>
 
-						</Button>
-					</div>
-				</div>
-			</div>
-		</section>
+				<Button
+					render={
+						<a
+							href='https://github.com/waruhachi/satuji'
+							target='_blank'
+							rel='noreferrer'
+							aria-label='Open Satuji GitHub repository'
+							title='GitHub'
+						/>
+					}
+					variant='ghost'
+					size='icon'
+					className='absolute bottom-4 left-1/2 -translate-x-1/2 text-muted-foreground hover:text-foreground hover:bg-muted/80'
+				>
+					<HugeiconsIcon
+						icon={GithubIcon}
+						size={20}
+					/>
+				</Button>
 			</section>
 	);
 }
