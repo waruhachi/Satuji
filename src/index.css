@@ -219,6 +219,12 @@
 		@apply font-sans;
 	}
 
+	/* Prevents vertical overscroll bounce */
+	html,
+	body {
+		overscroll-behavior-y: none;
+	}
+
 	/* Scrollbar */
 	* {
 		scrollbar-width: thin;
