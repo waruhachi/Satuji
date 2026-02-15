@@ -49,7 +49,6 @@ export function ImageInput({
 
 		timeoutRef.current = setTimeout(() => {
 			img = new Image();
-			img.crossOrigin = 'anonymous';
 			img.onload = () => {
 				if (isActive && latestUrlRef.current === currentUrl) {
 					setImageStatus({ url: currentUrl, status: 'valid' });
