@@ -4,11 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocalStorage } from '@uidotdev/usehooks';
 import { createFileRoute } from '@tanstack/react-router';
 import { HugeiconsIcon } from '@hugeicons/react';
-import {
-	Menu01Icon,
-	CodeSimpleIcon,
-	Cancel01Icon,
-} from '@hugeicons/core-free-icons';
+import { Menu01Icon, EyeIcon, Cancel01Icon } from '@hugeicons/core-free-icons';
 
 import { BuilderSidebar } from '@components/builder/sidebar';
 import { BuilderContent } from '@components/builder/content';
@@ -235,13 +231,19 @@ function RouteComponent() {
 		if (activeSection === 'news') return 'News';
 
 		if (activeSection.startsWith('app-')) {
-			const index = Number.parseInt(activeSection.replace('app-', ''), 10);
+			const index = Number.parseInt(
+				activeSection.replace('app-', ''),
+				10,
+			);
 			const appName = source.apps[index]?.name;
 			return appName ? `App: ${appName}` : `App ${index + 1}`;
 		}
 
 		if (activeSection.startsWith('news-')) {
-			const index = Number.parseInt(activeSection.replace('news-', ''), 10);
+			const index = Number.parseInt(
+				activeSection.replace('news-', ''),
+				10,
+			);
 			const newsTitle = source.news[index]?.title;
 			return newsTitle ? `News: ${newsTitle}` : `News ${index + 1}`;
 		}
@@ -271,17 +273,17 @@ function RouteComponent() {
 		<main className='bg-background min-h-[100dvh]'>
 			<div className='hidden md:flex h-screen min-h-screen overflow-hidden'>
 				{/* Sidebar Navigation */}
-					<BuilderSidebar
-						source={source}
-						activeSection={activeSection}
-						onSectionChange={setActiveSection}
-						onAddApp={addApp}
-						onAddNews={addNews}
-						onImport={handleImport}
-						onReset={handleReset}
-						onValidate={validateSource}
-						validationErrors={validationErrors}
-					/>
+				<BuilderSidebar
+					source={source}
+					activeSection={activeSection}
+					onSectionChange={setActiveSection}
+					onAddApp={addApp}
+					onAddNews={addNews}
+					onImport={handleImport}
+					onReset={handleReset}
+					onValidate={validateSource}
+					validationErrors={validationErrors}
+				/>
 
 				{/* Main Content Area */}
 				<div className='flex-1 flex min-h-0 overflow-hidden'>
@@ -300,6 +302,8 @@ function RouteComponent() {
 					{/* Builder Preview Panel */}
 					<BuilderPreview
 						source={source}
+						activeSection={activeSection}
+						onSectionChange={setActiveSection}
 						validationErrors={validationErrors}
 						exportPlatform={exportPlatform}
 						onExportPlatformChange={setExportPlatform}
@@ -341,10 +345,10 @@ function RouteComponent() {
 							className='gap-2 bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-muted'
 						>
 							<HugeiconsIcon
-								icon={CodeSimpleIcon}
+								icon={EyeIcon}
 								size={16}
 							/>
-							JSON
+							Preview
 						</Button>
 					</div>
 				</header>
@@ -421,7 +425,7 @@ function RouteComponent() {
 				>
 					<DialogHeader className='px-4 py-3 border-b border-sidebar-border bg-sidebar'>
 						<div className='flex items-center justify-between gap-2'>
-							<DialogTitle>JSON Output</DialogTitle>
+							<DialogTitle>Preview</DialogTitle>
 							<DialogClose
 								render={
 									<Button
@@ -443,6 +447,8 @@ function RouteComponent() {
 						<BuilderPreview
 							mode='mobile'
 							source={source}
+							activeSection={activeSection}
+							onSectionChange={setActiveSection}
 							validationErrors={validationErrors}
 							exportPlatform={exportPlatform}
 							onExportPlatformChange={setExportPlatform}

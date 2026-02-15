@@ -1,6 +1,6 @@
-import type { AltSource } from '@lib/types';
+import type { AltSource, SectionID } from '@lib/types';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
 	Copy01Icon,
@@ -10,16 +10,20 @@ import {
 	CodeSimpleIcon,
 	ArrowRight01Icon,
 	ArrowLeft01Icon,
+	Cursor01Icon,
+	MoreVerticalIcon,
+	EyeIcon,
 } from '@hugeicons/core-free-icons';
 import { toast } from 'sonner';
 
 import { Button } from '@ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@ui/select';
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-} from '@ui/select';
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@ui/dropdown-menu';
 import {
 	buildExportSource,
 	exportPlatformIcon,
@@ -27,6 +31,10 @@ import {
 	type ExportPlatform,
 } from '@lib/source-format';
 import { cn } from '@lib/utils';
+import {
+	StorePreview,
+	type StorePreviewScreen,
+} from '@components/builder/store-preview';
 
 type JsonTokenType =
 	| 'key'
@@ -104,6 +112,8 @@ const tokenizeJson = (value: string): JsonToken[] => {
 interface JsonPreviewPanelProps {
 	mode?: 'desktop' | 'mobile';
 	source: AltSource;
+	activeSection: SectionID;
+	onSectionChange: (section: SectionID) => void;
 	validationErrors: string[];
 	exportPlatform: ExportPlatform;
 	onExportPlatformChange: (platform: ExportPlatform) => void;
@@ -114,6 +124,8 @@ interface JsonPreviewPanelProps {
 export function BuilderPreview({
 	mode = 'desktop',
 	source,
+	activeSection,
+	onSectionChange,
 	validationErrors,
 	exportPlatform,
 	onExportPlatformChange,
@@ -123,9 +135,22 @@ export function BuilderPreview({
 	const isDesktop = mode === 'desktop';
 	const shouldShowPanel = isDesktop ? isOpen : true;
 	const [copied, setCopied] = useState(false);
+	const [showJson, setShowJson] = useState(false);
+	const [pickMode, setPickMode] = useState(false);
+	const [manualScreen, setManualScreen] = useState<{
+		token: object;
+		screen: StorePreviewScreen;
+	} | null>(null);
 	const exportSource = useMemo(
 		() => buildExportSource(source, exportPlatform),
 		[source, exportPlatform],
+	);
+
+	// Used to scope in-panel navigation. When the editor changes section, the token
+	// changes and we fall back to auto-follow behavior without needing an effect.
+	const sectionToken = useMemo(
+		() => ({ section: activeSection }),
+		[activeSection],
 	);
 
 	const cleanedSource = useMemo(() => {
@@ -174,10 +199,36 @@ export function BuilderPreview({
 		() => JSON.stringify(cleanedSource, null, 2),
 		[cleanedSource],
 	);
-	const highlightedJson = useMemo(
-		() => tokenizeJson(jsonString),
-		[jsonString],
-	);
+	const highlightedJson = useMemo(() => {
+		if (!showJson) return [];
+		return tokenizeJson(jsonString);
+	}, [jsonString, showJson]);
+
+	const followScreen = useMemo<StorePreviewScreen>(() => {
+		if (activeSection === 'source') return { kind: 'home' };
+		if (activeSection === 'apps') return { kind: 'all-apps' };
+		if (activeSection === 'news') return { kind: 'all-news' };
+
+		if (activeSection.startsWith('app-')) {
+			const index = Number.parseInt(
+				activeSection.slice('app-'.length),
+				10,
+			);
+			return {
+				kind: 'app-detail',
+				appIndex: Number.isFinite(index) ? index : 0,
+				back: 'all-apps',
+			};
+		}
+
+		if (activeSection.startsWith('news-')) return { kind: 'all-news' };
+		return { kind: 'home' };
+	}, [activeSection]);
+
+	const effectiveScreen =
+		manualScreen?.token === sectionToken ?
+			manualScreen.screen
+		:	followScreen;
 
 	const handleCopy = async () => {
 		try {
@@ -204,27 +255,37 @@ export function BuilderPreview({
 		URL.revokeObjectURL(url);
 	};
 
+	const handlePickSection = (section: SectionID) => {
+		onSectionChange(section);
+		setPickMode(false);
+	};
+
+	const handleNavigate = (next: StorePreviewScreen) => {
+		setManualScreen({ token: sectionToken, screen: next });
+	};
+
 	return (
-			<div
-				className={cn(
-					'bg-sidebar flex flex-col min-h-0',
-					isDesktop && 'relative border-l border-sidebar-border transition-all duration-300',
-					isDesktop && (isOpen ? 'w-105' : 'w-0'),
-					isDesktop && 'overflow-visible',
-					!isDesktop && 'w-full h-full overflow-hidden',
-				)}
-			>
-					{isDesktop && (
-						<Button
-							variant='outline'
-							size='icon-sm'
-							onClick={onToggle}
-							className='absolute -left-7 top-6 h-14 w-7 rounded-l-xl rounded-r-none border-r-0 border-border bg-card/95 text-muted-foreground hover:text-foreground hover:bg-muted z-20 shadow-sm'
-							title={isOpen ? 'Hide JSON Preview' : 'Show JSON Preview'}
-							aria-label={isOpen ? 'Hide JSON Preview' : 'Show JSON Preview'}
-						>
-						{isOpen ?
-							<HugeiconsIcon
+		<div
+			className={cn(
+				'bg-sidebar flex flex-col min-h-0',
+				isDesktop &&
+					'relative border-l border-sidebar-border transition-all duration-300',
+				isDesktop && (isOpen ? 'w-105' : 'w-0'),
+				isDesktop && 'overflow-visible',
+				!isDesktop && 'w-full h-full overflow-hidden',
+			)}
+		>
+			{isDesktop && (
+				<Button
+					variant='outline'
+					size='icon-sm'
+					onClick={onToggle}
+					className='absolute -left-7 top-6 h-14 w-7 rounded-l-xl rounded-r-none border-r-0 border-border bg-card/95 text-muted-foreground hover:text-foreground hover:bg-muted z-20 shadow-sm'
+					title={isOpen ? 'Hide Preview' : 'Show Preview'}
+					aria-label={isOpen ? 'Hide Preview' : 'Show Preview'}
+				>
+					{isOpen ?
+						<HugeiconsIcon
 							icon={ArrowRight01Icon}
 							size={16}
 						/>
@@ -232,9 +293,9 @@ export function BuilderPreview({
 							icon={ArrowLeft01Icon}
 							size={16}
 						/>
-						}
-					</Button>
-				)}
+					}
+				</Button>
+			)}
 
 			{shouldShowPanel && (
 				<>
@@ -244,19 +305,17 @@ export function BuilderPreview({
 							<div className='flex items-center gap-2'>
 								<div className='w-8 h-8 rounded-lg bg-muted flex items-center justify-center'>
 									<HugeiconsIcon
-										icon={CodeSimpleIcon}
+										icon={
+											showJson ? CodeSimpleIcon : EyeIcon
+										}
 										size={16}
 										className='text-primary'
 									/>
 								</div>
 								<div>
 									<h3 className='font-medium text-foreground text-sm'>
-										JSON Output
+										{showJson ? 'JSON Output' : 'Preview'}
 									</h3>
-									<p className='text-xs text-muted-foreground'>
-										{jsonString.length.toLocaleString()}{' '}
-										chars
-									</p>
 								</div>
 							</div>
 							<div className='flex items-center gap-1'>
@@ -289,16 +348,18 @@ export function BuilderPreview({
 											</span>
 										</span>
 									</SelectTrigger>
-										<SelectContent
-											align='end'
-											className='bg-card border border-border text-foreground ring-border/40 shadow-xl'
-										>
-											<SelectItem
-												value='altstore'
+									<SelectContent
+										align='end'
+										className='bg-card border border-border text-foreground ring-border/40 shadow-xl'
+									>
+										<SelectItem
+											value='altstore'
 											className='text-xs'
 										>
 											<img
-												src={exportPlatformIcon('altstore')}
+												src={exportPlatformIcon(
+													'altstore',
+												)}
 												alt='AltStore'
 												className='w-4 h-4 rounded-sm object-cover'
 											/>
@@ -309,7 +370,9 @@ export function BuilderPreview({
 											className='text-xs'
 										>
 											<img
-												src={exportPlatformIcon('sidestore')}
+												src={exportPlatformIcon(
+													'sidestore',
+												)}
 												alt='SideStore'
 												className='w-4 h-4 rounded-sm object-cover'
 											/>
@@ -317,6 +380,31 @@ export function BuilderPreview({
 										</SelectItem>
 									</SelectContent>
 								</Select>
+								{!showJson && (
+									<Button
+										variant='ghost'
+										size='sm'
+										onClick={() =>
+											setPickMode((prev) => !prev)
+										}
+										aria-pressed={pickMode}
+										title={
+											pickMode ? 'Disable pick mode' : (
+												'Enable pick mode'
+											)
+										}
+										className={cn(
+											'h-8 px-2 text-muted-foreground hover:text-foreground hover:bg-muted',
+											pickMode &&
+												'bg-primary/10 text-primary hover:text-primary hover:bg-primary/15',
+										)}
+									>
+										<HugeiconsIcon
+											icon={Cursor01Icon}
+											size={16}
+										/>
+									</Button>
+								)}
 								<Button
 									variant='ghost'
 									size='sm'
@@ -346,6 +434,47 @@ export function BuilderPreview({
 										size={16}
 									/>
 								</Button>
+								<DropdownMenu>
+									<DropdownMenuTrigger
+										render={
+											<Button
+												variant='ghost'
+												size='sm'
+												className='h-8 px-2 text-muted-foreground hover:text-foreground hover:bg-muted'
+											>
+												<HugeiconsIcon
+													icon={MoreVerticalIcon}
+													size={16}
+												/>
+											</Button>
+										}
+									></DropdownMenuTrigger>
+									<DropdownMenuContent
+										align='end'
+										className='bg-card border-border'
+									>
+										<DropdownMenuItem
+											onClick={() => {
+												setShowJson((prev) => !prev);
+												setPickMode(false);
+											}}
+											className='text-muted-foreground hover:text-foreground focus:text-foreground focus:bg-muted'
+										>
+											<HugeiconsIcon
+												icon={
+													showJson ? EyeIcon : (
+														CodeSimpleIcon
+													)
+												}
+												size={16}
+												className='mr-2'
+											/>
+											{showJson ?
+												'Back to Preview'
+											:	'View JSON'}
+										</DropdownMenuItem>
+									</DropdownMenuContent>
+								</DropdownMenu>
 							</div>
 						</div>
 					</div>
@@ -378,25 +507,49 @@ export function BuilderPreview({
 						</div>
 					)}
 
-					{/* Code Preview */}
-					<div className='flex-1 overflow-auto p-4'>
-						<pre className='w-full min-h-full rounded-xl border border-border bg-card/30 p-4 font-mono text-xs leading-5 text-foreground whitespace-pre-wrap break-all overflow-hidden'>
-							<code>
-								{highlightedJson.map((token, index) => (
-									<span
-										key={`${index}-${token.type ?? 'plain'}`}
-										className={
-											token.type ?
-												JSON_TOKEN_CLASS[token.type]
-											:	undefined
-										}
-									>
-										{token.text}
-									</span>
-								))}
-							</code>
-						</pre>
-					</div>
+					{/* Preview Body */}
+					{showJson ?
+						<div className='flex-1 overflow-auto p-4'>
+							<Button
+								variant='ghost'
+								size='sm'
+								onClick={() => setShowJson(false)}
+								className='mb-3 h-8 px-2 text-muted-foreground hover:text-foreground hover:bg-muted w-fit'
+							>
+								<HugeiconsIcon
+									icon={ArrowLeft01Icon}
+									size={16}
+								/>
+								Back to Preview
+							</Button>
+							<pre className='w-full rounded-xl border border-border bg-card/30 p-4 font-mono text-xs leading-5 text-foreground whitespace-pre overflow-x-auto'>
+								<code>
+									{highlightedJson.map((token, index) => (
+										<span
+											key={`${index}-${token.type ?? 'plain'}`}
+											className={
+												token.type ?
+													JSON_TOKEN_CLASS[token.type]
+												:	undefined
+											}
+										>
+											{token.text}
+										</span>
+									))}
+								</code>
+							</pre>
+						</div>
+					:	<div className='flex-1 overflow-hidden'>
+							<StorePreview
+								source={source}
+								screen={effectiveScreen}
+								activeSection={activeSection}
+								pickMode={pickMode}
+								onNavigate={handleNavigate}
+								onPickSection={handlePickSection}
+							/>
+						</div>
+					}
 
 					{/* Footer Stats */}
 					<div className='p-3 border-t border-sidebar-border bg-card/50'>
