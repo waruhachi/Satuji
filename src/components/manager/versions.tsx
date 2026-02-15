@@ -163,7 +163,7 @@ export function VersionManager({ versions, onUpdate }: VersionManagerProps) {
 									}
 								></CollapsibleTrigger>
 								<CollapsibleContent>
-									<div className='p-4 pt-0 space-y-4 border-t border-border'>
+									<div className='p-4 space-y-4 border-t border-border'>
 										<div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
 											<div className='space-y-2'>
 												<Label className='text-muted-foreground'>
@@ -216,15 +216,31 @@ export function VersionManager({ versions, onUpdate }: VersionManagerProps) {
 												</Label>
 												<Input
 													type='number'
-													value={version.size}
-													onChange={(e) =>
-														handleUpdate(index, {
-															size: Number(
-																e.target.value,
-															),
-														})
+													// Allow the field to be cleared while keeping `size` a number in state.
+													value={
+														version.size === 0 ?
+															''
+														:	version.size
 													}
-													placeholder='10000000'
+													onChange={(e) => {
+														const raw =
+															e.target.value;
+														const next =
+															raw === '' ? 0 : (
+																Number(raw)
+															);
+														handleUpdate(index, {
+															size:
+																(
+																	Number.isFinite(
+																		next,
+																	)
+																) ?
+																	next
+																:	0,
+														});
+													}}
+													placeholder='0'
 													className='bg-card border-border text-foreground placeholder:text-muted-foreground'
 												/>
 											</div>
