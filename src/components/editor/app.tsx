@@ -75,13 +75,13 @@ export function AppEditor({
 	};
 
 	return (
-			<div className='space-y-6'>
-				{/* Header */}
-				<div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
-					<div className='flex items-center gap-3 sm:gap-4 min-w-0'>
-						{app.iconURL ?
-							<img
-								src={app.iconURL}
+		<div className='space-y-6'>
+			{/* Header */}
+			<div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
+				<div className='flex items-center gap-3 sm:gap-4 min-w-0'>
+					{app.iconURL ?
+						<img
+							src={app.iconURL}
 							alt={app.name ? `${app.name} icon` : 'App icon'}
 							className='w-16 h-16 rounded-2xl object-cover'
 						/>
@@ -98,34 +98,34 @@ export function AppEditor({
 							/>
 						</div>
 					}
-						<div className='min-w-0'>
-							<h1 className='text-xl sm:text-2xl font-bold text-foreground truncate'>
-								{app.name || 'Untitled App'}
-							</h1>
-							<p className='text-muted-foreground font-mono text-xs sm:text-sm truncate'>
-								{app.bundleIdentifier || 'com.example.app'}
-							</p>
-						</div>
+					<div className='min-w-0'>
+						<h1 className='text-xl sm:text-2xl font-bold text-foreground truncate'>
+							{app.name || 'Untitled App'}
+						</h1>
+						<p className='text-muted-foreground font-mono text-xs sm:text-sm truncate'>
+							{app.bundleIdentifier || 'com.example.app'}
+						</p>
 					</div>
-					<div className='flex items-center gap-2 w-full sm:w-auto'>
-						<Button
-							variant='outline'
-							size='sm'
-							onClick={onDuplicate}
-							className='flex-1 sm:flex-none gap-2 bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-muted'
-						>
+				</div>
+				<div className='flex items-center gap-2 w-full sm:w-auto'>
+					<Button
+						variant='outline'
+						size='sm'
+						onClick={onDuplicate}
+						className='flex-1 sm:flex-none gap-2 bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-muted'
+					>
 						<HugeiconsIcon
 							icon={Copy01Icon}
 							size={16}
 						/>
 						Duplicate
 					</Button>
-						<Button
-							variant='outline'
-							size='sm'
-							onClick={onDelete}
-							className='flex-1 sm:flex-none gap-2 bg-transparent border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive/50'
-						>
+					<Button
+						variant='outline'
+						size='sm'
+						onClick={onDelete}
+						className='flex-1 sm:flex-none gap-2 bg-transparent border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive/50'
+					>
 						<HugeiconsIcon
 							icon={Delete02Icon}
 							size={16}

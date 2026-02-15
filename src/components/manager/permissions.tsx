@@ -162,12 +162,12 @@ export function PermissionManager({
 					System capabilities your app requires
 				</p>
 
-					{availableEntitlements.length > 0 && (
-						<div className='flex flex-col sm:flex-row gap-2'>
-							<Select
-								value={newEntitlement}
-								onValueChange={handleEntitlementChange}
-							>
+				{availableEntitlements.length > 0 && (
+					<div className='flex flex-col sm:flex-row gap-2'>
+						<Select
+							value={newEntitlement}
+							onValueChange={handleEntitlementChange}
+						>
 							<SelectTrigger className='bg-card border-border text-foreground flex-1'>
 								<SelectValue placeholder='Select an entitlement...' />
 							</SelectTrigger>
@@ -182,12 +182,12 @@ export function PermissionManager({
 								))}
 							</SelectContent>
 						</Select>
-							<Button
-								onClick={() => handleAddEntitlement(newEntitlement)}
-								disabled={!newEntitlement}
-								size='icon'
-								className='bg-primary hover:bg-primary/90 w-full sm:w-9'
-							>
+						<Button
+							onClick={() => handleAddEntitlement(newEntitlement)}
+							disabled={!newEntitlement}
+							size='icon'
+							className='bg-primary hover:bg-primary/90 w-full sm:w-9'
+						>
 							<HugeiconsIcon
 								icon={PlusSignIcon}
 								size={16}
@@ -196,20 +196,20 @@ export function PermissionManager({
 					</div>
 				)}
 
-					<div className='flex flex-col sm:flex-row gap-2'>
-						<Input
-							value={customEntitlement}
+				<div className='flex flex-col sm:flex-row gap-2'>
+					<Input
+						value={customEntitlement}
 						onChange={(e) => setCustomEntitlement(e.target.value)}
 						placeholder='Or enter custom entitlement...'
 						className='bg-card border-border text-foreground placeholder:text-muted-foreground font-mono text-sm'
 					/>
-						<Button
-							onClick={handleAddCustomEntitlement}
-							disabled={!customEntitlement}
-							variant='outline'
-							size='icon'
-							className='bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-muted w-full sm:w-9'
-						>
+					<Button
+						onClick={handleAddCustomEntitlement}
+						disabled={!customEntitlement}
+						variant='outline'
+						size='icon'
+						className='bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-muted w-full sm:w-9'
+					>
 						<HugeiconsIcon
 							icon={PlusSignIcon}
 							size={16}
@@ -276,15 +276,15 @@ export function PermissionManager({
 				</p>
 
 				<div className='space-y-3'>
-						<div className='flex flex-col sm:flex-row gap-2'>
-							{availablePrivacyKeys.length > 0 ?
-								<Select
-									value={newPrivacyKey}
-									onValueChange={handlePrivacyKeyChange}
-								>
-									<SelectTrigger className='bg-card border-border text-foreground w-full sm:w-50'>
-										<SelectValue placeholder='Permission type' />
-									</SelectTrigger>
+					<div className='flex flex-col sm:flex-row gap-2'>
+						{availablePrivacyKeys.length > 0 ?
+							<Select
+								value={newPrivacyKey}
+								onValueChange={handlePrivacyKeyChange}
+							>
+								<SelectTrigger className='bg-card border-border text-foreground w-full sm:w-50'>
+									<SelectValue placeholder='Permission type' />
+								</SelectTrigger>
 								<SelectContent className='bg-card border-border'>
 									{availablePrivacyKeys.map((privacy) => (
 										<SelectItem
@@ -301,25 +301,25 @@ export function PermissionManager({
 								onChange={(e) =>
 									setCustomPrivacyKey(e.target.value)
 								}
-									placeholder='Custom permission key...'
-									className='bg-card border-border text-foreground placeholder:text-muted-foreground w-full sm:w-50 font-mono text-sm'
-								/>
-							}
+								placeholder='Custom permission key...'
+								className='bg-card border-border text-foreground placeholder:text-muted-foreground w-full sm:w-50 font-mono text-sm'
+							/>
+						}
 						<Input
 							value={newPrivacyValue}
 							onChange={(e) => setNewPrivacyValue(e.target.value)}
 							placeholder='Usage description...'
 							className='bg-card border-border text-foreground placeholder:text-muted-foreground flex-1'
 						/>
-							<Button
-								onClick={handleAddPrivacy}
+						<Button
+							onClick={handleAddPrivacy}
 							disabled={
 								(!newPrivacyKey && !customPrivacyKey) ||
 								!newPrivacyValue
 							}
-								size='icon'
-								className='bg-primary hover:bg-primary/90 w-full sm:w-9'
-							>
+							size='icon'
+							className='bg-primary hover:bg-primary/90 w-full sm:w-9'
+						>
 							<HugeiconsIcon
 								icon={PlusSignIcon}
 								size={16}

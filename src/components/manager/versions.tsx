@@ -68,17 +68,17 @@ export function VersionManager({ versions, onUpdate }: VersionManagerProps) {
 		return `${Number.parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 	};
 
-		return (
-			<div className='space-y-4 p-4 rounded-xl border border-border bg-card/30'>
-				<div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2'>
-					<p className='text-sm text-muted-foreground'>
-						{versions.length} version{versions.length !== 1 ? 's' : ''}
-					</p>
-					<Button
-						onClick={handleAdd}
-						size='sm'
-						className='w-full sm:w-auto justify-center gap-2 bg-primary hover:bg-primary/90 text-foreground'
-					>
+	return (
+		<div className='space-y-4 p-4 rounded-xl border border-border bg-card/30'>
+			<div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2'>
+				<p className='text-sm text-muted-foreground'>
+					{versions.length} version{versions.length !== 1 ? 's' : ''}
+				</p>
+				<Button
+					onClick={handleAdd}
+					size='sm'
+					className='w-full sm:w-auto justify-center gap-2 bg-primary hover:bg-primary/90 text-foreground'
+				>
 					<HugeiconsIcon
 						icon={PlusSignIcon}
 						size={16}

@@ -37,10 +37,10 @@ export function Hero() {
 						visual interface, and export clean, optimized JSON.
 					</p>
 
-						<div className='mt-10 flex flex-col sm:flex-row items-center gap-4'>
-							<Button
-								size='lg'
-								className='gap-2 h-12 px-6'
+					<div className='mt-10 flex flex-col sm:flex-row items-center gap-4'>
+						<Button
+							size='lg'
+							className='gap-2 h-12 px-6'
 							onClick={() => navigate({ to: '/builder' })}
 						>
 							Start Building
@@ -48,30 +48,30 @@ export function Hero() {
 								icon={ArrowRight02Icon}
 								size={16}
 							/>
-							</Button>
-						</div>
+						</Button>
 					</div>
 				</div>
+			</div>
 
-				<Button
-					render={
-						<a
-							href='https://github.com/waruhachi/satuji'
-							target='_blank'
-							rel='noreferrer'
-							aria-label='Open Satuji GitHub repository'
-							title='GitHub'
-						/>
-					}
-					variant='ghost'
-					size='icon'
-					className='absolute bottom-4 left-1/2 -translate-x-1/2 text-muted-foreground hover:text-foreground hover:bg-muted/80'
-				>
-					<HugeiconsIcon
-						icon={GithubIcon}
-						size={20}
+			<Button
+				render={
+					<a
+						href='https://github.com/waruhachi/satuji'
+						target='_blank'
+						rel='noreferrer'
+						aria-label='Open Satuji GitHub repository'
+						title='GitHub'
 					/>
-				</Button>
-			</section>
+				}
+				variant='ghost'
+				size='icon'
+				className='absolute bottom-4 left-1/2 -translate-x-1/2 text-muted-foreground hover:text-foreground hover:bg-muted/80'
+			>
+				<HugeiconsIcon
+					icon={GithubIcon}
+					size={20}
+				/>
+			</Button>
+		</section>
 	);
 }

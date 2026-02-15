@@ -52,18 +52,18 @@ export function ScreenshotManager({
 		onUpdate(newScreenshots);
 	};
 
-		return (
-			<div className='space-y-4 p-4 rounded-xl border border-border bg-card/30'>
-				<div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2'>
-					<p className='text-sm text-muted-foreground'>
-						{normalizedScreenshots.length} screenshot
-						{normalizedScreenshots.length !== 1 ? 's' : ''}
-					</p>
-					<Button
-						onClick={handleAdd}
-						size='sm'
-						className='w-full sm:w-auto justify-center gap-2 bg-primary hover:bg-primary/90 text-foreground'
-					>
+	return (
+		<div className='space-y-4 p-4 rounded-xl border border-border bg-card/30'>
+			<div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2'>
+				<p className='text-sm text-muted-foreground'>
+					{normalizedScreenshots.length} screenshot
+					{normalizedScreenshots.length !== 1 ? 's' : ''}
+				</p>
+				<Button
+					onClick={handleAdd}
+					size='sm'
+					className='w-full sm:w-auto justify-center gap-2 bg-primary hover:bg-primary/90 text-foreground'
+				>
 					<HugeiconsIcon
 						icon={PlusSignIcon}
 						size={16}
@@ -96,20 +96,20 @@ export function ScreenshotManager({
 					</Button>
 				</div>
 			:	<div className='space-y-4'>
-						{normalizedScreenshots.map((screenshot, index) => (
-							<div
-								key={screenshot.__id || index}
-								className='flex flex-col sm:flex-row gap-4 p-4 rounded-lg bg-card/50 border border-border'
-							>
-								<div className='flex items-center'>
-									<HugeiconsIcon
+					{normalizedScreenshots.map((screenshot, index) => (
+						<div
+							key={screenshot.__id || index}
+							className='flex flex-col sm:flex-row gap-4 p-4 rounded-lg bg-card/50 border border-border'
+						>
+							<div className='flex items-center'>
+								<HugeiconsIcon
 									icon={DragDropVerticalIcon}
 									size={16}
 									className='text-muted-foreground cursor-grab'
 								/>
 							</div>
 
-								<div className='w-full h-48 sm:w-20 sm:h-36 rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0 border border-border'>
+							<div className='w-full h-48 sm:w-20 sm:h-36 rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0 border border-border'>
 								{screenshot.imageURL ?
 									<img
 										src={
@@ -127,13 +127,13 @@ export function ScreenshotManager({
 								}
 							</div>
 
-								<div className='flex-1 space-y-3'>
-									<div className='space-y-2'>
-										<Label className='text-muted-foreground'>
-											Image URL
-										</Label>
-										<div className='flex flex-col sm:flex-row gap-2 items-stretch sm:items-center'>
-											<Input
+							<div className='flex-1 space-y-3'>
+								<div className='space-y-2'>
+									<Label className='text-muted-foreground'>
+										Image URL
+									</Label>
+									<div className='flex flex-col sm:flex-row gap-2 items-stretch sm:items-center'>
+										<Input
 											value={screenshot.imageURL}
 											onChange={(e) =>
 												handleUpdate(index, {
@@ -153,7 +153,7 @@ export function ScreenshotManager({
 									</div>
 								</div>
 
-									<div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+								<div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
 									<div className='space-y-2'>
 										<Label className='text-muted-foreground'>
 											Width (px)
@@ -199,12 +199,12 @@ export function ScreenshotManager({
 								</div>
 							</div>
 
-								<Button
-									variant='ghost'
-									size='icon'
-									onClick={() => handleDelete(index)}
-									className='self-end sm:self-start shrink-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10'
-								>
+							<Button
+								variant='ghost'
+								size='icon'
+								onClick={() => handleDelete(index)}
+								className='self-end sm:self-start shrink-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10'
+							>
 								<HugeiconsIcon
 									icon={Delete02Icon}
 									size={16}

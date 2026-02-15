@@ -374,7 +374,7 @@ export function BuilderSidebar({
 			</nav>
 
 			{/* Footer Actions */}
-				<div className='p-3 border-t border-border space-y-2'>
+			<div className='p-3 border-t border-border space-y-2'>
 				<input
 					ref={fileInputRef}
 					type='file'
@@ -408,11 +408,11 @@ export function BuilderSidebar({
 							size={16}
 						/>
 					</Button>
-					</div>
+				</div>
 
-					<Button
-						variant='outline'
-						size='sm'
+				<Button
+					variant='outline'
+					size='sm'
 					onClick={onValidate}
 					className={`w-full gap-2 ${
 						validationErrors.length === 0 ?
