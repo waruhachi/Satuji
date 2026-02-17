@@ -18,11 +18,9 @@ export function Hero() {
 						Build Your
 						<FlipWords
 							words={[
-								'Esign',
-								'Scarlet',
+								'Feather',
 								'AltStore',
 								'SideStore',
-								'KravaSigner',
 							]}
 						/>
 						<br />
