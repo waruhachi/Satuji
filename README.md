@@ -33,11 +33,10 @@
 - **Validation Engine**: Robust client-side validation to ensure sources meet AltStore and SideStore export requirements.
 - **Platform Exports**: Validate and export sources in formats specifically tailored for AltStore or SideStore.
 
-|                                       |
-|:-------------------------------------:|
-| ![](./public/Dark/Source.png#gh-dark-mode-only)![](./public/Light/Source.png#gh-light-mode-only) |
-| ![](./public/Dark/App.png#gh-dark-mode-only)![](./public/Light/App.png#gh-light-mode-only) |
-| ![](./public/Dark/News.png#gh-dark-mode-only)![](./public/Light/News.png#gh-light-mode-only) |
+<div align="center">
+<img src="./public/Dark/Source.png#gh-dark-mode-only" width="30%"></img> <img src="./public/Dark/App.png#gh-dark-mode-only" width="30%"></img> <img src="./public/Dark/News.png#gh-dark-mode-only" width="30%"></img> 
+<img src="./public/Light/Source.png#gh-light-mode-only" width="30%"></img> <img src="./public/Light/App.png#gh-light-mode-only" width="30%"></img> <img src="./public/Light/News.png#gh-light-mode-only" width="30%"></img> 
+</div>
 
 <!-- LOCAL DEVELOPMENT -->
 ## Local Development
